@@ -6,24 +6,25 @@
 <title>Fission — Get your business online without the huge upfront cost</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#FBF9F4;
-    --paper-dim:#F3F0E8;
-    --ink:#17171A;
-    --ink-soft:#55555B;
-    --ink-faint:#8B8B90;
-    --line:#E3E0D5;
-    --line-dark:#33333A;
-    --energy:#FF5A36;
-    --energy-dim:#FFE6DE;
-    --trust:#0F6E4F;
-    --trust-dim:#DFF0E7;
-    --wa:#25D366;
-    --wa-bubble:#DCF8C6;
-    --radius:14px;
-    --max:1120px;
+    --purple:#6C4CF1;
+    --purple-dark:#5A38E8;
+    --purple-light:#EFEAFE;
+    --purple-line:#E4DEFB;
+    --ink:#14141F;
+    --ink-soft:#5B5B6B;
+    --ink-faint:#8B8B9A;
+    --bg:#FAFAFC;
+    --card:#FFFFFF;
+    --line:#E9E8F2;
+    --green:#22C55E;
+    --green-light:#E7F9EE;
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:10px;
+    --max:430px;
   }
 
   *{box-sizing:border-box;}
@@ -35,1187 +36,810 @@
 
   body{
     margin:0;
-    background:var(--paper);
+    background:#EDEDF3;
     color:var(--ink);
-    font-family:'Source Serif 4', Georgia, serif;
-    font-size:17px;
-    line-height:1.6;
+    font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing:antialiased;
   }
 
-  h1,h2,h3,.display{
-    font-family:'Space Grotesk', sans-serif;
-    letter-spacing:-0.01em;
-    margin:0;
-  }
-
-  .mono{
-    font-family:'IBM Plex Mono', monospace;
-  }
-
-  a{color:inherit;}
+  a{color:inherit; text-decoration:none;}
   button{font-family:inherit;}
 
   :focus-visible{
-    outline:2.5px solid var(--energy);
+    outline:2.5px solid var(--purple);
     outline-offset:3px;
   }
 
-  .wrap{
+  /* Page frame: constrains the site to a phone-like column, centered,
+     so the layout reads exactly like the reference on any screen. */
+  .frame{
     max-width:var(--max);
     margin:0 auto;
-    padding:0 28px;
+    background:var(--bg);
+    min-height:100vh;
+    box-shadow:0 0 60px rgba(20,20,31,0.08);
+    overflow:hidden;
   }
+
+  .wrap{padding:0 22px;}
 
   /* ---------- NAV ---------- */
   header.nav{
-    position:sticky;
-    top:0;
-    z-index:50;
-    background:rgba(251,249,244,0.88);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);
-  }
-  .nav-inner{
-    max-width:var(--max);
-    margin:0 auto;
-    padding:16px 28px;
     display:flex;
     align-items:center;
     justify-content:space-between;
+    padding:22px 22px 18px;
+    background:var(--bg);
   }
   .logo{
     display:flex;
-    align-items:baseline;
-    gap:8px;
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    font-size:22px;
-    text-decoration:none;
+    align-items:center;
+    gap:9px;
+    font-weight:800;
+    font-size:19px;
+    letter-spacing:0.01em;
     color:var(--ink);
   }
-  .logo .dot{
-    width:8px;height:8px;border-radius:50%;
-    background:var(--energy);
-    display:inline-block;
-  }
-  .nav-links{
-    display:flex;
-    align-items:center;
-    gap:28px;
-    font-family:'Space Grotesk', sans-serif;
-    font-size:14.5px;
-  }
-  .nav-links a{
-    text-decoration:none;
-    color:var(--ink-soft);
-  }
-  .nav-links a:hover{color:var(--ink);}
-  .btn{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:600;
-    font-size:14.5px;
+  .logo svg{display:block;}
+  .menu-btn{
+    background:none;
     border:none;
-    border-radius:999px;
-    padding:11px 22px;
+    padding:4px;
     cursor:pointer;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    transition:transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
   }
-  .btn-primary{
+  .menu-btn span{
+    width:22px;height:2.5px;
     background:var(--ink);
-    color:var(--paper);
-  }
-  .btn-primary:hover{ background:#000; transform:translateY(-1px);}
-  .btn-ghost{
-    background:transparent;
-    color:var(--ink);
-    border:1.5px solid var(--line);
-  }
-  .btn-ghost:hover{border-color:var(--ink);}
-  @media (max-width:760px){
-    .nav-links a.hide-mobile{display:none;}
+    border-radius:2px;
+    display:block;
   }
 
   /* ---------- HERO ---------- */
-  .hero{
-    padding:76px 0 40px;
-  }
-  .eyebrow{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12.5px;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color:var(--ink-faint);
-    display:flex;
+  .hero{padding:6px 0 0;}
+  .badge{
+    display:inline-flex;
     align-items:center;
-    gap:10px;
-    margin-bottom:20px;
-  }
-  .eyebrow::before{
-    content:"";
-    width:22px;height:1px;
-    background:var(--ink-faint);
-    display:inline-block;
+    gap:7px;
+    background:var(--purple-light);
+    color:var(--purple);
+    font-weight:600;
+    font-size:12.5px;
+    padding:8px 14px;
+    border-radius:999px;
+    margin-bottom:18px;
   }
   .hero h1{
-    font-size:clamp(34px, 5.4vw, 60px);
-    font-weight:700;
-    line-height:1.05;
-    max-width:15ch;
+    font-size:32px;
+    font-weight:800;
+    line-height:1.18;
+    letter-spacing:-0.015em;
+    margin:0;
+    color:var(--ink);
   }
-  .hero .accent{color:var(--energy);}
+  .hero h1 .accent{color:var(--purple);}
   .hero p.lede{
-    font-size:19px;
+    font-size:15px;
+    line-height:1.6;
     color:var(--ink-soft);
-    max-width:46ch;
-    margin-top:22px;
+    margin:16px 0 0;
+    max-width:38ch;
   }
+
   .hero-cta{
     display:flex;
-    gap:14px;
-    margin-top:32px;
-    flex-wrap:wrap;
-  }
-
-  /* ---------- METER (signature element) ---------- */
-  .meter{
-    margin-top:56px;
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    background:var(--paper-dim);
-    padding:28px;
-    position:relative;
-    overflow:hidden;
-  }
-  .meter-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    gap:20px;
-    flex-wrap:wrap;
-  }
-  .meter-label{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:14px;
-    color:var(--ink-soft);
-  }
-  .freq-tabs{
-    display:inline-flex;
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:999px;
-    padding:4px;
-    gap:2px;
-  }
-  .freq-tab{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:13.5px;
-    font-weight:600;
-    border:none;
-    background:transparent;
-    color:var(--ink-soft);
-    padding:8px 15px;
-    border-radius:999px;
-    cursor:pointer;
-    position:relative;
-    white-space:nowrap;
-  }
-  .freq-tab[aria-pressed="true"]{
-    background:var(--ink);
-    color:var(--paper);
-  }
-  .freq-tab .tag{
-    display:block;
-    font-size:9.5px;
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-    font-weight:600;
-    color:var(--energy);
-    margin-top:1px;
-  }
-  .freq-tab[aria-pressed="true"] .tag{ color:#FFB199; }
-
-  .meter-readout{
-    margin-top:26px;
-    display:grid;
-    grid-template-columns:1fr auto;
-    align-items:end;
-    gap:20px;
-  }
-  .price-ring{
-    position:relative;
-    display:inline-block;
-  }
-  .price-ring::before{
-    content:"";
-    position:absolute;
-    inset:-18px;
-    border-radius:50%;
-    background:radial-gradient(circle, var(--energy-dim) 0%, transparent 70%);
-    opacity:0;
-    transform:scale(0.6);
-  }
-  .price-ring.pulse::before{
-    animation:ring 0.6s ease-out;
-  }
-  @keyframes ring{
-    0%{opacity:0.9; transform:scale(0.5);}
-    100%{opacity:0; transform:scale(1.3);}
-  }
-  .price-big{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    font-size:clamp(38px, 5vw, 56px);
-    position:relative;
-    z-index:1;
-  }
-  .price-sub{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    color:var(--ink-faint);
-    margin-top:4px;
-  }
-  .price-plan{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--ink-faint);
-    text-align:right;
-  }
-  .price-plan b{color:var(--ink);}
-
-  .meter-compare{
-    margin-top:22px;
-    padding-top:18px;
-    border-top:1px dashed var(--line);
-    display:flex;
-    gap:28px;
-    flex-wrap:wrap;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-  }
-  .compare-item{color:var(--ink-soft);}
-  .compare-item .strike{
-    text-decoration:line-through;
-    color:var(--ink-faint);
-  }
-  .compare-item b{color:var(--ink);}
-
-  /* ---------- FEATURE STRIP ---------- */
-  .strip{
-    padding:20px 0 70px;
-  }
-  .strip-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:1px;
-    background:var(--line);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    overflow:hidden;
-  }
-  .strip-item{
-    background:var(--paper);
-    padding:22px;
-  }
-  .strip-item h4{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:15px;
-    margin:0 0 6px;
-  }
-  .strip-item p{
-    margin:0;
-    font-size:14.5px;
-    color:var(--ink-soft);
-  }
-  @media (max-width:700px){
-    .strip-grid{grid-template-columns:1fr;}
-  }
-
-  /* ---------- SECTION HEADERS ---------- */
-  .section{padding:88px 0;}
-  .section-head{
-    max-width:56ch;
-    margin-bottom:48px;
-  }
-  .section-head .eyebrow{margin-bottom:14px;}
-  .section-head h2{
-    font-size:clamp(26px,3.4vw,38px);
-    font-weight:700;
-  }
-  .section-head p{
-    color:var(--ink-soft);
-    margin-top:14px;
-    font-size:17px;
-  }
-
-  /* ---------- PROCESS (dark) ---------- */
-  .process{
-    background:var(--ink);
-    color:var(--paper);
-  }
-  .process .eyebrow{color:#9A9AA0;}
-  .process .eyebrow::before{background:#9A9AA0;}
-  .process .section-head h2{color:var(--paper);}
-  .process .section-head p{color:#B7B7BC;}
-
-  .steps{
-    border-top:1px solid var(--line-dark);
-  }
-  .step{
-    display:grid;
-    grid-template-columns:64px 1fr;
-    gap:22px;
-    padding:26px 0;
-    border-bottom:1px solid var(--line-dark);
-    align-items:start;
-  }
-  .step-num{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:15px;
-    color:var(--energy);
-    padding-top:2px;
-  }
-  .step h3{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:19px;
-    font-weight:600;
-    color:var(--paper);
-  }
-  .step p{
-    margin:8px 0 0;
-    color:#B7B7BC;
-    font-size:15.5px;
-    max-width:60ch;
-  }
-  .step-note{
-    margin-top:18px;
-    padding-top:18px;
-    border-top:1px solid var(--line-dark);
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    color:#8F8F95;
-  }
-
-  /* ---------- PACKAGES ---------- */
-  .pack-toggle-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:16px;
-    margin-bottom:36px;
-  }
-  .cards{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px;
-  }
-  @media (max-width:860px){
-    .cards{grid-template-columns:1fr;}
-  }
-  .card{
-    border:1.5px solid var(--line);
-    border-radius:var(--radius);
-    padding:28px;
-    background:var(--paper);
-    display:flex;
     flex-direction:column;
-  }
-  .card.featured{
-    border-color:var(--ink);
-    background:var(--paper-dim);
-    position:relative;
-  }
-  .card-badge{
-    position:absolute;
-    top:-13px;
-    left:26px;
-    background:var(--energy);
-    color:var(--paper);
-    font-family:'Space Grotesk', sans-serif;
-    font-size:11.5px;
-    font-weight:700;
-    letter-spacing:0.03em;
-    text-transform:uppercase;
-    padding:5px 12px;
-    border-radius:999px;
-  }
-  .card h3{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:20px;
-    font-weight:700;
-  }
-  .card .desc{
-    color:var(--ink-soft);
-    font-size:14.5px;
-    margin-top:6px;
-  }
-  .card .price-row{
-    margin-top:22px;
-    display:flex;
-    align-items:baseline;
-    gap:6px;
-  }
-  .card .price{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:34px;
-    font-weight:700;
-  }
-  .card .per{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    color:var(--ink-faint);
-  }
-  .card .price-eq{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--ink-faint);
-    margin-top:4px;
-  }
-  .card ul{
-    list-style:none;
-    margin:22px 0 0;
-    padding:0;
-    flex-grow:1;
-  }
-  .card li{
-    display:flex;
-    gap:10px;
-    align-items:flex-start;
-    font-size:14.5px;
-    color:var(--ink-soft);
-    padding:7px 0;
-  }
-  .card li svg{flex-shrink:0; margin-top:3px;}
-  .card .btn{
+    gap:12px;
     margin-top:24px;
-    width:100%;
+  }
+  .btn{
+    font-weight:700;
+    font-size:15px;
+    border-radius:13px;
+    padding:16px 20px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
     justify-content:center;
+    gap:8px;
+    border:none;
+    transition:transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
   }
-
-  /* ---------- DOMAIN ---------- */
-  .domain-cards{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
+  .btn-primary{
+    background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    color:#fff;
+    box-shadow:0 10px 24px -8px rgba(108,76,241,0.55);
   }
-  @media (max-width:700px){ .domain-cards{grid-template-columns:1fr;} }
-  .dcard{
+  .btn-primary:hover{filter:brightness(1.05); transform:translateY(-1px);}
+  .btn-ghost{
+    background:#fff;
+    color:var(--ink);
     border:1.5px solid var(--line);
-    border-radius:var(--radius);
-    padding:26px;
   }
-  .dcard h3{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:18px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-  }
-  .dcard .url{
-    display:inline-block;
-    margin-top:14px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:14px;
-    background:var(--paper-dim);
-    border:1px solid var(--line);
-    border-radius:8px;
-    padding:8px 12px;
-  }
-  .dcard p.d{
-    color:var(--ink-soft);
-    font-size:14.5px;
-    margin-top:14px;
-  }
-  .price-chip{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    padding:4px 10px;
-    border-radius:999px;
-  }
-  .price-chip.free{ background:var(--trust-dim); color:var(--trust); }
-  .price-chip.paid{ background:var(--energy-dim); color:var(--energy); }
+  .btn-ghost:hover{border-color:var(--purple);}
 
-  /* ---------- EXAMPLE ---------- */
-  .example-grid{
-    display:grid;
-    grid-template-columns:1.15fr 0.85fr;
-    gap:36px;
-    align-items:center;
+  /* ---------- SHOWCASE (browser mockup + floating card) ---------- */
+  .showcase{
+    position:relative;
+    margin-top:34px;
+    padding-bottom:36px;
   }
-  @media (max-width:860px){
-    .example-grid{grid-template-columns:1fr;}
-  }
-  .browser{
-    border:1px solid var(--line);
-    border-radius:var(--radius);
+  .browser-card{
+    margin-left:auto;
+    width:83%;
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 18px 40px -14px rgba(20,20,31,0.22);
     overflow:hidden;
-    background:var(--paper);
-    box-shadow:0 20px 50px -25px rgba(23,23,26,0.35);
+    border:1px solid var(--line);
   }
   .browser-bar{
     display:flex;
     align-items:center;
-    gap:8px;
-    padding:11px 14px;
-    background:var(--paper-dim);
+    justify-content:space-between;
+    padding:14px 16px;
     border-bottom:1px solid var(--line);
   }
-  .browser-bar .dots{display:flex; gap:6px;}
-  .browser-bar .dots span{
-    width:9px;height:9px;border-radius:50%;
+  .browser-shop{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-weight:700;
+    font-size:13px;
+    color:var(--ink);
+  }
+  .browser-icons{
+    display:flex;
+    gap:12px;
+    color:var(--ink-soft);
+  }
+  .browser-body{padding:18px 16px 0;}
+  .browser-body h3{
+    font-size:20px;
+    font-weight:800;
+    line-height:1.22;
+    margin:0;
+    color:var(--ink);
+  }
+  .browser-body .tag{
+    font-size:12px;
+    color:var(--ink-faint);
+    margin:8px 0 14px;
+  }
+  .shop-btn{
+    display:inline-flex;
+    align-items:center;
+    background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    color:#fff;
+    font-size:12.5px;
+    font-weight:700;
+    padding:9px 16px;
+    border-radius:9px;
+    margin-bottom:16px;
+  }
+  .browser-img{
+    width:100%;
+    height:150px;
+    object-fit:cover;
+    display:block;
+  }
+
+  .float-card{
+    position:absolute;
+    left:0;
+    bottom:64px;
+    width:57%;
+    background:#fff;
+    border-radius:16px;
+    padding:14px 16px;
+    box-shadow:0 16px 34px -12px rgba(20,20,31,0.28);
+    border:1px solid var(--line);
+  }
+  .float-card .title{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:8px;
+  }
+  .live-row{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:7px;
+  }
+  .live-row .live-text{
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink-soft);
+    letter-spacing:0.03em;
+  }
+  .live-dot{
+    width:16px;height:16px;
+    border-radius:50%;
+    background:var(--green);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .float-card .url{
+    font-size:12px;
+    color:var(--ink-faint);
+    font-weight:600;
+  }
+
+  .dots{
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    margin-top:18px;
+  }
+  .dots span{
+    width:6px;height:6px;
+    border-radius:50%;
     background:var(--line);
   }
-  .browser-bar .url{
-    flex-grow:1;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--ink-soft);
-    background:var(--paper);
+  .dots span.active{
+    width:16px;
+    border-radius:4px;
+    background:var(--purple);
+  }
+
+  /* ---------- FEATURE STRIP ---------- */
+  .strip{
+    background:#fff;
     border:1px solid var(--line);
-    border-radius:6px;
-    padding:5px 10px;
-    text-align:center;
-  }
-  .site-mock{padding:0;}
-  .site-nav{
-    display:flex;
-    gap:18px;
-    padding:16px 20px;
-    border-bottom:1px solid var(--line);
-    font-family:'Space Grotesk', sans-serif;
-    font-size:12.5px;
-    color:var(--ink-soft);
-  }
-  .site-nav b{color:var(--ink);}
-  .site-hero{
-    height:150px;
-    background:
-      linear-gradient(135deg, #F1DCC9 0%, #E7B896 45%, #C98A5F 100%);
-    display:flex;
-    align-items:flex-end;
-    padding:16px 20px;
-  }
-  .site-hero span{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    font-size:20px;
-    color:#fff;
-    text-shadow:0 2px 10px rgba(0,0,0,0.25);
-  }
-  .site-grid{
+    border-radius:var(--radius-lg);
+    padding:26px 14px;
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:8px;
-    padding:16px 20px;
+    grid-template-columns:1fr 1fr;
+    row-gap:26px;
+    column-gap:8px;
+    box-shadow:0 12px 30px -18px rgba(20,20,31,0.12);
   }
-  .site-grid div{
-    aspect-ratio:1;
-    border-radius:6px;
-    background:var(--paper-dim);
-    border:1px solid var(--line);
+  .feat{
+    text-align:center;
+    padding:0 4px;
   }
-  .site-grid div:nth-child(1){background:#EADFCB;}
-  .site-grid div:nth-child(2){background:#E3CBB6;}
-  .site-grid div:nth-child(3){background:#D9B79C;}
-  .wa-float{
-    display:flex;
-    justify-content:flex-end;
-    padding:0 20px 18px;
-  }
-  .wa-btn{
+  .feat .icon{
     width:38px;height:38px;
-    border-radius:50%;
-    background:var(--wa);
+    margin:0 auto 10px;
+    color:var(--purple);
     display:flex;
     align-items:center;
     justify-content:center;
   }
-  .example-copy .tag-list{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:18px;
-  }
-  .tag-pill{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    border:1px solid var(--line);
-    border-radius:999px;
-    padding:5px 12px;
-    color:var(--ink-soft);
-  }
-
-  /* ---------- WHATSAPP MOMENT ---------- */
-  .wa-section{
-    background:var(--paper-dim);
-  }
-  .wa-grid{
-    display:grid;
-    grid-template-columns:0.9fr 1.1fr;
-    gap:40px;
-    align-items:center;
-  }
-  @media (max-width:860px){ .wa-grid{grid-template-columns:1fr;} }
-  .phone{
-    max-width:300px;
-    margin:0 auto;
-    border:10px solid var(--ink);
-    border-radius:32px;
-    overflow:hidden;
-    background:#ECE5DD;
-    box-shadow:0 25px 60px -30px rgba(23,23,26,0.5);
-  }
-  .phone-head{
-    background:#075E54;
-    color:#fff;
-    padding:14px 16px;
-    font-family:'Space Grotesk', sans-serif;
-    font-size:14px;
-    font-weight:600;
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  .phone-head .av{
-    width:28px;height:28px;border-radius:50%;
-    background:var(--energy);
-    display:flex;align-items:center;justify-content:center;
-    font-size:12px;font-weight:700;color:#fff;
-  }
-  .phone-body{padding:18px 14px; min-height:220px;}
-  .bubble{
-    background:var(--wa-bubble);
-    border-radius:10px 10px 10px 2px;
-    padding:11px 13px;
-    max-width:85%;
-    font-family:'Source Serif 4', serif;
-    font-size:14.5px;
-    line-height:1.45;
-    box-shadow:0 1px 1px rgba(0,0,0,0.06);
-  }
-  .bubble + .bubble{ margin-top:10px; }
-  .bubble .link{
-    display:block;
-    margin-top:6px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    color:#0B5FA5;
-    text-decoration:underline;
-  }
-  .bubble .time{
-    display:block;
-    text-align:right;
-    font-size:10.5px;
-    color:var(--ink-faint);
-    margin-top:5px;
-    font-family:'IBM Plex Mono', monospace;
-  }
-
-  /* ---------- RECURRING ---------- */
-  .recur-list{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:14px;
-    margin-top:8px;
-  }
-  @media (max-width:700px){ .recur-list{grid-template-columns:1fr;} }
-  .recur-item{
-    display:flex;
-    gap:12px;
-    padding:16px;
-    border:1px solid var(--line);
-    border-radius:10px;
-  }
-  .recur-item h4{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:14.5px;
-    margin:0 0 4px;
-  }
-  .recur-item p{
-    margin:0;
+  .feat h4{
     font-size:13.5px;
+    font-weight:700;
+    margin:0 0 4px;
+    color:var(--ink);
+  }
+  .feat p{
+    font-size:11.5px;
+    color:var(--ink-faint);
+    margin:0;
+    line-height:1.4;
+  }
+
+  /* ---------- SECTION HEADS ---------- */
+  .section{padding:56px 0 0;}
+  .section-head{
+    text-align:center;
+    margin-bottom:26px;
+  }
+  .section-head h2{
+    font-size:23px;
+    font-weight:800;
+    margin:0;
+    color:var(--ink);
+  }
+  .section-head p{
+    font-size:13.5px;
+    color:var(--ink-faint);
+    margin:8px 0 0;
+  }
+
+  /* ---------- PRICING ---------- */
+  .pricing-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .price-card{
+    background:#fff;
+    border:1.5px solid var(--line);
+    border-radius:var(--radius-md);
+    padding:20px 14px 16px;
+    text-align:center;
+    position:relative;
+  }
+  .price-card.popular{
+    border-color:var(--purple);
+    box-shadow:0 0 0 1px var(--purple);
+  }
+  .popular-badge{
+    position:absolute;
+    top:-11px;
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--purple);
+    color:#fff;
+    font-size:9.5px;
+    font-weight:700;
+    letter-spacing:0.03em;
+    padding:4px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .price-card .icon{
+    width:26px;height:26px;
+    margin:0 auto 10px;
+    color:var(--purple);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .price-card .plan-name{
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:10px;
+  }
+  .price-card .amount{
+    font-size:22px;
+    font-weight:800;
+    color:var(--ink);
+  }
+  .price-card .per{
+    font-size:11.5px;
+    color:var(--ink-faint);
+    margin:2px 0 14px;
+  }
+  .choose-btn{
+    width:100%;
+    background:#fff;
+    border:1.5px solid var(--line);
+    border-radius:9px;
+    padding:10px;
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .choose-btn:hover{border-color:var(--purple); color:var(--purple);}
+  .choose-btn.filled{
+    background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    border:none;
+    color:#fff;
+  }
+  .choose-btn.filled:hover{filter:brightness(1.05);}
+
+  .fee-note{
+    margin-top:16px;
+    background:var(--purple-light);
+    border-radius:12px;
+    padding:13px 14px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 14px;
+    justify-content:center;
+    font-size:12px;
+    font-weight:600;
     color:var(--ink-soft);
   }
+  .fee-note .item{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+  .fee-note svg{color:var(--purple); flex-shrink:0;}
 
-  /* ---------- FOOTER CTA ---------- */
-  .final{
-    background:var(--ink);
-    color:var(--paper);
-    text-align:center;
-    padding:100px 0 60px;
+  /* ---------- DASHBOARD PREVIEW ---------- */
+  .dash-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+    box-shadow:0 16px 36px -20px rgba(20,20,31,0.2);
   }
-  .final h2{
-    font-size:clamp(28px,4.4vw,46px);
-    max-width:16ch;
-    margin:0 auto;
+  .dash-inner{
+    display:flex;
+    min-height:340px;
   }
-  .final p{
-    color:#B7B7BC;
-    margin-top:16px;
-    max-width:44ch;
-    margin-left:auto;
-    margin-right:auto;
+  .dash-side{
+    width:96px;
+    background:#fff;
+    border-right:1px solid var(--line);
+    padding:16px 10px;
+    flex-shrink:0;
   }
-  .final .hero-cta{justify-content:center; margin-top:30px;}
-  .final .btn-ghost{ border-color:var(--line-dark); color:var(--paper); }
+  .dash-logo{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-weight:800;
+    font-size:11px;
+    margin-bottom:18px;
+    padding-left:4px;
+  }
+  .dash-logo svg{width:14px;height:14px;}
+  .dash-nav{display:flex; flex-direction:column; gap:4px;}
+  .dash-nav-item{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 8px;
+    border-radius:8px;
+    font-size:10px;
+    font-weight:600;
+    color:var(--ink-soft);
+  }
+  .dash-nav-item svg{width:14px;height:14px; flex-shrink:0;}
+  .dash-nav-item.active{
+    background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    color:#fff;
+  }
 
-  footer.foot{
-    background:var(--ink);
-    border-top:1px solid var(--line-dark);
-    padding:26px 0 40px;
+  .dash-main{
+    flex:1;
+    padding:16px 14px;
+    min-width:0;
   }
-  .foot-inner{
+  .dash-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:16px;
+  }
+  .dash-welcome h5{
+    font-size:13px;
+    font-weight:800;
+    margin:0 0 3px;
+    color:var(--ink);
+  }
+  .dash-welcome p{
+    font-size:9.5px;
+    color:var(--ink-faint);
+    margin:0;
+  }
+  .dash-icons{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+  }
+  .bell{
+    position:relative;
+    width:26px;height:26px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--ink-soft);
+  }
+  .bell .dot{
+    position:absolute;
+    top:-3px;right:-3px;
+    background:var(--purple);
+    color:#fff;
+    font-size:7px;
+    font-weight:700;
+    width:13px;height:13px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .avatar{
+    width:26px;height:26px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#F5C177,#E8946B);
+  }
+
+  .dash-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .stat{
+    border:1px solid var(--line);
+    border-radius:11px;
+    padding:10px;
+  }
+  .stat .label{
+    font-size:8.5px;
+    color:var(--ink-faint);
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  .stat .value{
+    font-size:15px;
+    font-weight:800;
+    color:var(--ink);
+  }
+  .stat .delta{
+    font-size:8.5px;
+    font-weight:700;
+    color:var(--green);
+    margin:2px 0 6px;
+  }
+
+  .dash-recent{
+    margin-top:12px;
+    padding-top:10px;
+    border-top:1px solid var(--line);
     display:flex;
     justify-content:space-between;
     align-items:center;
-    flex-wrap:wrap;
-    gap:12px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12.5px;
-    color:#8F8F95;
+    font-size:9.5px;
+  }
+  .dash-recent .label{font-weight:700; color:var(--ink);}
+  .dash-recent .view{color:var(--purple); font-weight:700;}
+
+  footer.foot{
+    padding:44px 22px 40px;
+    text-align:center;
+    color:var(--ink-faint);
+    font-size:11.5px;
   }
 </style>
 </head>
 <body>
+<div class="frame">
 
-<header class="nav">
-  <div class="nav-inner">
-    <a href="#top" class="logo"><span class="dot"></span>Fission</a>
-    <nav class="nav-links">
-      <a href="#how" class="hide-mobile">How it works</a>
-      <a href="#packages" class="hide-mobile">Packages</a>
-      <a href="#example" class="hide-mobile">Examples</a>
-      <a href="#packages" class="btn btn-primary">Get started</a>
-    </nav>
-  </div>
-</header>
+  <header class="nav">
+    <div class="logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M14 2L5 13H11L9 22L19 10H12L14 2Z" fill="url(#g1)"/>
+        <defs>
+          <linearGradient id="g1" x1="5" y1="2" x2="19" y2="22" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#7C5CFC"/>
+            <stop offset="1" stop-color="#5A38E8"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      FISSION
+    </div>
+    <button class="menu-btn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
 
-<main id="top">
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="wrap">
-      <p class="eyebrow">Websites for small business, built by hand</p>
+  <div class="wrap">
+    <section class="hero">
+      <span class="badge">✦ Professional Websites. Flexible Payments.</span>
       <h1>Get your business online without the <span class="accent">huge upfront cost.</span></h1>
-      <p class="lede">Fission builds and ships your website, then keeps it running for a price that matches how you pay — daily, weekly, monthly, or yearly. No design tool to learn. No lump sum to save up for.</p>
+      <p class="lede">Fission builds modern, fast and beautiful websites for your business. You focus on running your business, we handle the rest.</p>
+
       <div class="hero-cta">
-        <a href="#packages" class="btn btn-primary">Choose a package</a>
-        <a href="#how" class="btn btn-ghost">See how it works</a>
+        <button class="btn btn-primary">View Plans &amp; Pricing
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <button class="btn btn-ghost">See Templates
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 9v11"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <section class="showcase">
+      <div class="browser-card">
+        <div class="browser-bar">
+          <div class="browser-shop">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20 15 15 0 010-20z"/></svg>
+            Bloom &amp; Co.
+          </div>
+          <div class="browser-icons">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          </div>
+        </div>
+        <div class="browser-body">
+          <h3>Beautiful Flowers for Every Moment</h3>
+          <p class="tag">Fresh. Elegant. Unforgettable.</p>
+          <span class="shop-btn">Shop Now</span>
+        </div>
+        <img class="browser-img" src="https://images.unsplash.com/photo-1487070183336-b863922373d4?q=80&w=600&auto=format&fit=crop" alt="Bouquet of pink and white flowers in a white vase">
       </div>
 
-      <!-- SIGNATURE METER -->
-      <div class="meter">
-        <div class="meter-top">
-          <div>
-            <div class="meter-label">One website. Paid your way.</div>
-          </div>
-          <div class="freq-tabs" role="group" aria-label="Choose payment frequency" id="freqTabs">
-            <button class="freq-tab" data-freq="daily" aria-pressed="false">Daily</button>
-            <button class="freq-tab" data-freq="weekly" aria-pressed="false">Weekly</button>
-            <button class="freq-tab" data-freq="monthly" aria-pressed="true">Monthly<span class="tag">Recommended</span></button>
-            <button class="freq-tab" data-freq="yearly" aria-pressed="false">Yearly<span class="tag">Best value</span></button>
-          </div>
+      <div class="float-card">
+        <div class="title">Your Website</div>
+        <div class="live-row">
+          <span class="live-dot">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span class="live-text">LIVE</span>
         </div>
-
-        <div class="meter-readout">
-          <div class="price-ring" id="priceRing">
-            <div class="price-big"><span id="priceMain">$39</span><span class="mono" id="priceUnit" style="font-size:16px; color:var(--ink-faint);">/month</span></div>
-            <div class="price-sub" id="priceEq">≈ $39.00 total this month</div>
-          </div>
-          <div class="price-plan">shown: <b>Business plan</b><br>switch below to compare packages</div>
-        </div>
-
-        <div class="meter-compare">
-          <div class="compare-item">Typical agency website: <span class="strike">$2,500 upfront</span></div>
-          <div class="compare-item">Fission: <b>$0 upfront</b>, cancel anytime</div>
-        </div>
+        <div class="url">bloomandco.com</div>
       </div>
-    </div>
-  </section>
 
-  <!-- FEATURE STRIP -->
-  <section class="strip">
-    <div class="wrap">
-      <div class="strip-grid">
-        <div class="strip-item">
-          <h4>No huge upfront cost</h4>
-          <p>Pay in small amounts as you go instead of one large bill before your site exists.</p>
-        </div>
-        <div class="strip-item">
-          <h4>Built by people, not a template tool</h4>
-          <p>A person on our team builds your site by hand. You never touch a drag-and-drop editor.</p>
-        </div>
-        <div class="strip-item">
-          <h4>Delivered to your WhatsApp</h4>
-          <p>When it's ready, we send you the link directly. No accounts, no dashboards to learn.</p>
-        </div>
+      <div class="dots">
+        <span class="active"></span><span></span><span></span>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- HOW IT WORKS -->
-  <section class="section process" id="how">
-    <div class="wrap">
+    <section class="strip">
+      <div class="feat">
+        <div class="icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20 15 15 0 010-20z"/></svg>
+        </div>
+        <h4>Free Domain</h4>
+        <p>.fission.site included</p>
+      </div>
+      <div class="feat">
+        <div class="icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 3v6c0 5-3.4 8.4-8 11-4.6-2.6-8-6-8-11V5l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <h4>Secure &amp; Fast</h4>
+        <p>SSL, backups &amp; 99.9% uptime</p>
+      </div>
+      <div class="feat">
+        <div class="icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
+        </div>
+        <h4>Mobile Ready</h4>
+        <p>Looks perfect on all devices</p>
+      </div>
+      <div class="feat">
+        <div class="icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3v5zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3v5z"/></svg>
+        </div>
+        <h4>24/7 Support</h4>
+        <p>We're here when you need us</p>
+      </div>
+    </section>
+
+    <section class="section">
       <div class="section-head">
-        <p class="eyebrow">The process</p>
-        <h2>From "I need a website" to a live link, in six moves.</h2>
-        <p>Every order follows the same path. You make a few choices, hand us your business details, and we take it from there.</p>
+        <h2>Simple, flexible pricing</h2>
+        <p>Choose a plan that works for your business.</p>
       </div>
 
-      <div class="steps">
-        <div class="step">
-          <div class="step-num mono">01</div>
-          <div><h3>Choose your package</h3><p>Pick the plan that matches how big a site your business needs.</p></div>
-        </div>
-        <div class="step">
-          <div class="step-num mono">02</div>
-          <div><h3>Choose how you pay</h3><p>Daily, weekly, monthly, or yearly. Monthly is the most common choice; yearly costs the least overall.</p></div>
-        </div>
-        <div class="step">
-          <div class="step-num mono">03</div>
-          <div><h3>Choose your address</h3><p>A free Fission address, or your own custom domain, which we buy and renew for you.</p></div>
-        </div>
-        <div class="step">
-          <div class="step-num mono">04</div>
-          <div><h3>Pay online</h3><p>Your order is created the moment payment is confirmed.</p></div>
-        </div>
-        <div class="step">
-          <div class="step-num mono">05</div>
-          <div><h3>Tell us about your business</h3><p>Name, logo, photos, services, prices, phone number, WhatsApp, address, and social accounts.</p></div>
-        </div>
-        <div class="step">
-          <div class="step-num mono">06</div>
-          <div><h3>We build it and send you the link</h3><p>We build your site, put it online, and message you when it's ready. From there, we keep it running and make changes as your business grows.</p></div>
-        </div>
-      </div>
-
-      <div class="step-note">Steps 01–04 happen on this site. Steps 05 and 06 happen with a real person on our team.</div>
-    </div>
-  </section>
-
-  <!-- PACKAGES -->
-  <section class="section" id="packages">
-    <div class="wrap">
-      <div class="pack-toggle-row">
-        <div class="section-head" style="margin-bottom:0;">
-          <p class="eyebrow">Packages</p>
-          <h2>Pick a package</h2>
-          <p>Every price below updates instantly with how you choose to pay.</p>
-        </div>
-        <div class="freq-tabs" role="group" aria-label="Choose payment frequency" id="freqTabs2">
-          <button class="freq-tab" data-freq="daily" aria-pressed="false">Daily</button>
-          <button class="freq-tab" data-freq="weekly" aria-pressed="false">Weekly</button>
-          <button class="freq-tab" data-freq="monthly" aria-pressed="true">Monthly</button>
-          <button class="freq-tab" data-freq="yearly" aria-pressed="false">Yearly</button>
-        </div>
-      </div>
-
-      <div class="cards">
-        <div class="card" data-plan="starter">
-          <h3>Starter</h3>
-          <p class="desc">A clean, simple site for a business just getting online.</p>
-          <div class="price-row"><span class="price"><span class="amt">$20</span></span><span class="per unit">/month</span></div>
-          <div class="price-eq eq">≈ $20.00 total this month</div>
-          <ul>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Professional website</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Business admin dashboard</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Up to 15 pages</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Mobile responsive</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Hosting</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> SSL</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Fission URL</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> WhatsApp integration</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Contact forms</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Google Maps</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Social media links</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Photo/gallery section</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Services section</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Testimonials</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> FAQ section</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Basic SEO</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Basic analytics</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Website backups</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Technical maintenance</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Customer support</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Website content management</li>
-          </ul>
-          <div class="price-eq eq" style="margin-top:10px;">One-time setup: ₦5,000 · Custom domain: additional</div>
-          <a href="#" class="btn btn-ghost">Start with Starter</a>
-        </div>
-
-        <div class="card featured" data-plan="business">
-          <span class="card-badge">Recommended</span>
-          <h3>Business</h3>
-          <p class="desc">The most common choice for an active, growing business.</p>
-          <div class="price-row"><span class="price"><span class="amt">$39</span></span><span class="per unit">/month</span></div>
-          <div class="price-eq eq">≈ $39.00 total this month</div>
-          <ul>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Everything in Starter, plus:</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 30+ pages</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Advanced admin dashboard</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Products/services management</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Customer management</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Booking/appointment system</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Appointment calendar</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Customer inquiries/leads</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Blog/news</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Advanced gallery</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Testimonials management</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Advanced SEO</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Google Analytics</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Search Console setup</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Email notifications</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Booking notifications</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> More website customization</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> More monthly content updates</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Priority support</li>
-          </ul>
-          <a href="#" class="btn btn-primary">Start with Business</a>
-        </div>
-
-        <div class="card" data-plan="pro">
-          <h3>Pro</h3>
-          <p class="desc">For businesses ready to sell online.</p>
-          <div class="price-row"><span class="price"><span class="amt">$59</span></span><span class="per unit">/month</span></div>
-          <div class="price-eq eq">≈ $59.00 total this month</div>
-          <ul>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Everything in Business, plus:</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 50+ pages</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Full online store</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Product management</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Categories</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Product variations</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Shopping cart</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Checkout</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Online payments</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Order management</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Inventory management</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Customer accounts</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Discount codes</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Sales dashboard</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Revenue analytics</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Abandoned-cart tracking</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Invoices/receipts</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Advanced customer management</li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Priority support</li>
-          </ul>
-          <a href="#" class="btn btn-ghost">Start with Pro</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DOMAIN -->
-  <section class="section" style="padding-top:0;">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Your address</p>
-        <h2>Where your website lives</h2>
-        <p>Every package includes a working address. A custom domain costs a little more, since we buy and renew it on your behalf.</p>
-      </div>
-      <div class="domain-cards">
-        <div class="dcard">
-          <h3>Fission address <span class="price-chip free">Included</span></h3>
-          <span class="url">businessname.fission.site</span>
-          <p class="d">Live the moment your site is built. No extra cost, no renewal to manage.</p>
-        </div>
-        <div class="dcard">
-          <h3>Custom domain <span class="price-chip paid">+$4/mo</span></h3>
-          <span class="url">businessname.com</span>
-          <p class="d">Your own domain, purchased and renewed by us for as long as you're subscribed.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- EXAMPLE -->
-  <section class="section" id="example">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">A real example</p>
-        <h2>What a finished site looks like</h2>
-        <p>ABC Fashion, a boutique clothing shop, chose the Business package and a custom domain.</p>
-      </div>
-
-      <div class="example-grid">
-        <div class="browser">
-          <div class="browser-bar">
-            <div class="dots"><span></span><span></span><span></span></div>
-            <div class="url">abcfashion.com</div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
           </div>
-          <div class="site-mock">
-            <div class="site-nav"><b>ABC Fashion</b><span>Home</span><span>About</span><span>Products</span><span>Gallery</span><span>Contact</span></div>
-            <div class="site-hero"><span>New season, in store now</span></div>
-            <div class="site-grid"><div></div><div></div><div></div></div>
-            <div class="wa-float">
-              <div class="wa-btn" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 1 1-3.8-6.8L20 4l-1.1 3.9A7.96 7.96 0 0 1 20 12Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.5 9.5c.3 2.6 2.4 4.7 5 5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <div class="plan-name">Daily</div>
+          <div class="amount">$1.30</div>
+          <div class="per">per day</div>
+          <button class="choose-btn">Choose</button>
+        </div>
+
+        <div class="price-card">
+          <div class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </div>
+          <div class="plan-name">Weekly</div>
+          <div class="amount">$9.01</div>
+          <div class="per">per week</div>
+          <button class="choose-btn">Choose</button>
+        </div>
+
+        <div class="price-card popular">
+          <span class="popular-badge">Most Popular</span>
+          <div class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01"/></svg>
+          </div>
+          <div class="plan-name">Monthly</div>
+          <div class="amount">$39</div>
+          <div class="per">per month</div>
+          <button class="choose-btn filled">Choose</button>
+        </div>
+
+        <div class="price-card">
+          <div class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9 12 2"/></svg>
+          </div>
+          <div class="plan-name">Yearly</div>
+          <div class="amount">$390</div>
+          <div class="per">per year</div>
+          <button class="choose-btn">Choose</button>
+        </div>
+      </div>
+
+      <div class="fee-note">
+        <span class="item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+          One-time setup fee: ₦5,000
+        </span>
+        <span class="item">Custom domain: additional</span>
+      </div>
+    </section>
+
+    <section class="section" style="padding-bottom:40px;">
+      <div style="margin-bottom:20px;">
+        <h2 style="font-size:22px; font-weight:800; margin:0;">Powerful admin dashboard</h2>
+        <p style="font-size:13.5px; color:var(--ink-faint); margin:8px 0 0;">Manage your website, content, customers and more — all in one place.</p>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-inner">
+          <div class="dash-side">
+            <div class="dash-logo">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M14 2L5 13H11L9 22L19 10H12L14 2Z" fill="url(#g2)"/><defs><linearGradient id="g2" x1="5" y1="2" x2="19" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#7C5CFC"/><stop offset="1" stop-color="#5A38E8"/></linearGradient></defs></svg>
+              FISSION
+            </div>
+            <nav class="dash-nav">
+              <div class="dash-nav-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+                Dashboard
               </div>
+              <div class="dash-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+                My Website
+              </div>
+              <div class="dash-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+                Pages
+              </div>
+              <div class="dash-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L13.42 20.6a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><circle cx="7" cy="7" r="1.5"/></svg>
+                Products
+              </div>
+              <div class="dash-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg>
+                Orders
+              </div>
+            </nav>
+          </div>
+
+          <div class="dash-main">
+            <div class="dash-top">
+              <div class="dash-welcome">
+                <h5>Welcome back, Emma 👋</h5>
+                <p>Here's what's happening with your website today.</p>
+              </div>
+              <div class="dash-icons">
+                <div class="bell">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                  <span class="dot">3</span>
+                </div>
+                <div class="avatar"></div>
+              </div>
+            </div>
+
+            <div class="dash-stats">
+              <div class="stat">
+                <div class="label">Visitors</div>
+                <div class="value">2,431</div>
+                <div class="delta">↑ 12.5%</div>
+                <svg width="100%" height="20" viewBox="0 0 80 20" preserveAspectRatio="none"><polyline points="0,16 15,14 30,10 45,12 60,6 80,2" fill="none" stroke="#22C55E" stroke-width="2"/></svg>
+              </div>
+              <div class="stat">
+                <div class="label">Page Views</div>
+                <div class="value">6,281</div>
+                <div class="delta">↑ 18.4%</div>
+                <svg width="100%" height="20" viewBox="0 0 80 20" preserveAspectRatio="none"><polyline points="0,10 15,16 30,8 45,14 60,4 80,8" fill="none" stroke="#6C4CF1" stroke-width="2"/></svg>
+              </div>
+              <div class="stat">
+                <div class="label">Leads</div>
+                <div class="value">84</div>
+                <div class="delta">↑ 8.7%</div>
+                <svg width="100%" height="20" viewBox="0 0 80 20" preserveAspectRatio="none"><polyline points="0,14 15,12 30,15 45,9 60,11 80,3" fill="none" stroke="#F59E0B" stroke-width="2"/></svg>
+              </div>
+              <div class="stat">
+                <div class="label">Bookings</div>
+                <div class="value">32</div>
+                <div class="delta">↑ 15.2%</div>
+                <svg width="100%" height="20" viewBox="0 0 80 20" preserveAspectRatio="none"><polyline points="0,15 15,13 30,14 45,7 60,9 80,4" fill="none" stroke="#3B82F6" stroke-width="2"/></svg>
+              </div>
+            </div>
+
+            <div class="dash-recent">
+              <span class="label">Recent Activity</span>
+              <span class="view">View all</span>
             </div>
           </div>
         </div>
-
-        <div class="example-copy">
-          <h3 style="font-family:'Space Grotesk',sans-serif; font-size:20px;">Home · About · Products · Gallery · Contact</h3>
-          <p style="color:var(--ink-soft); margin-top:10px;">Built from the business information ABC Fashion sent us: their name, logo, product photos, prices, and contact details. A WhatsApp button sits on every page so customers can message the shop directly.</p>
-          <div class="tag-list">
-            <span class="tag-pill">Business plan</span>
-            <span class="tag-pill">Custom domain</span>
-            <span class="tag-pill">Monthly billing</span>
-          </div>
-        </div>
       </div>
-    </div>
-  </section>
-
-  <!-- WHATSAPP MOMENT -->
-  <section class="section wa-section">
-    <div class="wrap">
-      <div class="wa-grid">
-        <div class="phone">
-          <div class="phone-head"><div class="av">F</div>Fission</div>
-          <div class="phone-body">
-            <div class="bubble">Your Fission website is ready 🎉<span class="time">10:42</span></div>
-            <div class="bubble">Please check it here:<span class="link">abcfashion.com</span><span class="time">10:42</span></div>
-          </div>
-        </div>
-        <div>
-          <p class="eyebrow">Delivery</p>
-          <h2 style="font-size:clamp(24px,3vw,32px);">We send you a link, not a file</h2>
-          <p style="color:var(--ink-soft); margin-top:14px; max-width:48ch;">When your site is live, we message you directly with the address. You open it, and it's your actual website — not a preview, not a mockup.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- RECURRING -->
-  <section class="section" style="padding-top:60px;">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">While you're subscribed</p>
-        <h2>Changes and upkeep, included</h2>
-        <p>Ask for a change, and we make it — within the limit of your plan.</p>
-      </div>
-      <div class="recur-list">
-        <div class="recur-item">
-          <div>
-            <h4>Your site stays online</h4>
-            <p>Hosting continues for as long as your subscription is active.</p>
-          </div>
-        </div>
-        <div class="recur-item">
-          <div>
-            <h4>Your domain stays active</h4>
-            <p>If you added a custom domain, we keep renewing it.</p>
-          </div>
-        </div>
-        <div class="recur-item">
-          <div>
-            <h4>Requests, handled directly</h4>
-            <p>"Change the phone number." "Add these three products." We do it.</p>
-          </div>
-        </div>
-        <div class="recur-item">
-          <div>
-            <h4>Support included</h4>
-            <p>The maintenance and support agreed to in your plan, ongoing.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<section class="final" id="cta">
-  <div class="wrap">
-    <h2>Your business deserves a real website.</h2>
-    <p>Choose a package, tell us about your business, and we'll take it from there.</p>
-    <div class="hero-cta">
-      <a href="#packages" class="btn btn-primary">Choose a package</a>
-    </div>
+    </section>
   </div>
-</section>
 
-<footer class="foot">
-  <div class="wrap foot-inner">
-    <span>Fission — professionally built, managed websites for small business</span>
-    <span>Not selling hosting. Not selling domains. Selling a website that's taken care of.</span>
-  </div>
-</footer>
-
-<script>
-  const PACKAGES = {
-    starter:  { daily: 0.70, weekly: 5,    monthly: 20, yearly: 200 },
-    business: { daily: 1.30, weekly: 9.01, monthly: 39, yearly: 390 },
-    pro:      { daily: 2.00, weekly: 14,   monthly: 59, yearly: 590 }
-  };
-
-  const FREQ_LABEL = {
-    daily:   { unit: '/day',   noun: 'today' },
-    weekly:  { unit: '/week',  noun: 'this week' },
-    monthly: { unit: '/month', noun: 'this month' },
-    yearly:  { unit: '/year',  noun: 'this year' }
-  };
-
-  function amountFor(pkg, freq){
-    return pkg[freq];
-  }
-
-  function fmt(n, freq){
-    // whole dollars for monthly/yearly, cents for daily/weekly
-    if(freq === 'daily' || freq === 'weekly'){
-      return '$' + n.toFixed(2);
-    }
-    return '$' + Math.round(n).toLocaleString();
-  }
-
-  let currentFreq = 'monthly';
-
-  function paintAll(){
-    // hero meter, representative package = business
-    const amt = amountFor(PACKAGES.business, currentFreq);
-    document.getElementById('priceMain').textContent = fmt(amt, currentFreq);
-    document.getElementById('priceUnit').textContent = FREQ_LABEL[currentFreq].unit;
-    document.getElementById('priceEq').textContent =
-      '≈ ' + fmt(amt, currentFreq) + ' total ' + FREQ_LABEL[currentFreq].noun;
-
-    // pulse
-    const ring = document.getElementById('priceRing');
-    ring.classList.remove('pulse');
-    void ring.offsetWidth;
-    ring.classList.add('pulse');
-
-    // both tab groups
-    document.querySelectorAll('.freq-tab').forEach(btn=>{
-      btn.setAttribute('aria-pressed', btn.dataset.freq === currentFreq ? 'true' : 'false');
-    });
-
-    // package cards
-    document.querySelectorAll('.card[data-plan]').forEach(card=>{
-      const plan = card.dataset.plan;
-      const a = amountFor(PACKAGES[plan], currentFreq);
-      card.querySelector('.amt').textContent = fmt(a, currentFreq);
-      card.querySelector('.unit').textContent = FREQ_LABEL[currentFreq].unit;
-      card.querySelector('.eq').textContent =
-        '≈ ' + fmt(a, currentFreq) + ' total ' + FREQ_LABEL[currentFreq].noun;
-    });
-  }
-
-  document.querySelectorAll('.freq-tab').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      currentFreq = btn.dataset.freq;
-      paintAll();
-    });
-  });
-
-  paintAll();
-</script>
-
+  <footer class="foot">© 2026 Fission. All rights reserved.</footer>
+</div>
 </body>
 </html>
