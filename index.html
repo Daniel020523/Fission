@@ -952,7 +952,7 @@
         <p>Choose a plan that works for your business.</p>
       </div>
 
-      <!-- Frequency toggle — recalculates the Starter plan price live -->
+      <!-- Frequency toggle — recalculates every plan's price live -->
       <div class="freq-tabs" id="freqTabs" role="tablist" aria-label="Billing frequency">
         <button class="freq-tab active" data-freq="day" role="tab" aria-selected="true">Daily</button>
         <button class="freq-tab" data-freq="week" role="tab" aria-selected="false">Weekly</button>
@@ -968,123 +968,161 @@
             <span class="plan-dot" style="background:#22C55E"></span>
             <h3>Fission Starter</h3>
           </div>
-          <p class="plan-tagline">For businesses that need a professional online presence.</p>
+          <p class="plan-tagline">For individuals, small businesses and startups.</p>
 
           <div class="plan-price">
-            <span class="amount" id="starterAmount">$1.30</span>
-            <span class="per" id="starterPer">/ day</span>
+            <span class="amount" data-freq-amount>₦1,000</span>
+            <span class="per" data-freq-per>/ day</span>
           </div>
-          <div class="freq-all">$1.30/day · $9.01/week · $39/month · $390/year</div>
+          <div class="freq-all">₦1,000/day · ₦6,500/week · ₦20,000/month · ₦200,000/year</div>
 
           <p class="includes-label">Includes:</p>
           <ul class="feat-list" data-max="6">
             <li>Professional website</li>
-            <li>Business admin dashboard</li>
-            <li>Up to 15 pages</li>
-            <li>Mobile responsive</li>
-            <li>Hosting</li>
-            <li>SSL</li>
-            <li>Fission URL</li>
-            <li>WhatsApp integration</li>
-            <li>Contact forms</li>
+            <li>Up to 5 pages</li>
+            <li>Mobile responsive design</li>
+            <li>Fission subdomain</li>
+            <li>SSL/security</li>
+            <li>Free hosting</li>
+            <li>Contact form</li>
+            <li>WhatsApp button</li>
+            <li>Social-media links</li>
+            <li>About/Services pages</li>
+            <li>Gallery</li>
             <li>Google Maps</li>
-            <li>Social media links</li>
-            <li>Photo/gallery section</li>
-            <li>Services section</li>
-            <li>Testimonials</li>
-            <li>FAQ section</li>
             <li>Basic SEO</li>
-            <li>Basic analytics</li>
-            <li>Website backups</li>
-            <li>Technical maintenance</li>
-            <li>Customer support</li>
-            <li>Website content management</li>
+            <li>Website analytics</li>
+            <li>Admin dashboard</li>
+            <li>Edit website content</li>
+            <li>Add/remove products or services</li>
+            <li>Basic customer enquiries</li>
+            <li>Automatic backups</li>
+            <li>Fission support</li>
           </ul>
-          <button class="show-more-btn">Show all 21 features</button>
+          <button class="show-more-btn">Show all 20 features</button>
 
           <div class="plan-fine">One-time setup: ₦5,000 · Custom domain: additional</div>
 
           <button class="choose-btn filled plan-choose">Choose Starter</button>
         </article>
 
-        <!-- ================= BUSINESS ================= -->
-        <article class="plan-card popular" data-plan="Fission Business">
+        <!-- ================= PRO ================= -->
+        <article class="plan-card popular" data-plan="Fission Pro">
           <span class="popular-badge">Most Popular</span>
+          <div class="plan-head">
+            <span class="plan-dot" style="background:#A855F7"></span>
+            <h3>Fission Pro</h3>
+          </div>
+          <p class="plan-tagline">For businesses that want to sell and manage customers online.</p>
+
+          <div class="plan-price">
+            <span class="amount" data-freq-amount>₦1,500</span>
+            <span class="per" data-freq-per>/ day</span>
+          </div>
+          <div class="freq-all">₦1,500/day · ₦9,000/week · ₦30,000/month · ₦300,000/year</div>
+
+          <p class="includes-label">Everything in Starter, plus:</p>
+          <ul class="feat-list" data-max="6">
+            <li>Custom domain</li>
+            <li>Up to 15 pages</li>
+            <li>Online store</li>
+            <li>Unlimited products</li>
+            <li>Product categories</li>
+            <li>Shopping cart</li>
+            <li>Online payments</li>
+            <li>Order management</li>
+            <li>Customer accounts</li>
+            <li>Discount/coupon codes</li>
+            <li>Email notifications</li>
+            <li>SMS notifications</li>
+            <li>OTP verification</li>
+            <li>Booking/appointment system</li>
+            <li>Blog</li>
+            <li>Advanced SEO</li>
+            <li>Advanced analytics</li>
+            <li>Remove Fission branding</li>
+            <li>More website customization</li>
+            <li>Custom payment settings</li>
+            <li>Customer management</li>
+            <li>Better storage/limits</li>
+            <li>Priority support</li>
+          </ul>
+          <button class="show-more-btn">Show all 23 features</button>
+
+          <div class="plan-fine">One-time setup: ₦5,000 · Custom domain: additional</div>
+
+          <button class="choose-btn filled plan-choose">Choose Pro</button>
+        </article>
+
+        <!-- ================= BUSINESS ================= -->
+        <article class="plan-card" data-plan="Fission Business">
           <div class="plan-head">
             <span class="plan-dot" style="background:#3B82F6"></span>
             <h3>Fission Business</h3>
           </div>
-          <p class="plan-tagline">For businesses that want their website to actually help them operate.</p>
+          <p class="plan-tagline">For established and growing businesses.</p>
 
           <div class="plan-price">
-            <span class="amount">$39</span>
-            <span class="per">/ month</span>
+            <span class="amount" data-freq-amount>₦2,500</span>
+            <span class="per" data-freq-per>/ day</span>
           </div>
+          <div class="freq-all">₦2,500/day · ₦15,000/week · ₦50,000/month · ₦500,000/year</div>
 
-          <p class="includes-label">Includes everything in Starter, plus:</p>
+          <p class="includes-label">Everything in Pro, plus:</p>
           <ul class="feat-list" data-max="6">
-            <li>30+ pages</li>
+            <li>Unlimited pages</li>
+            <li>Multiple staff accounts</li>
+            <li>Staff permissions</li>
             <li>Advanced admin dashboard</li>
-            <li>Products/services management</li>
-            <li>Customer management</li>
-            <li>Booking/appointment system</li>
-            <li>Appointment calendar</li>
-            <li>Customer inquiries/leads</li>
-            <li>Blog/news</li>
-            <li>Advanced gallery</li>
-            <li>Testimonials management</li>
-            <li>Advanced SEO</li>
-            <li>Google Analytics</li>
-            <li>Search Console setup</li>
-            <li>Email notifications</li>
-            <li>Booking notifications</li>
-            <li>More website customization</li>
-            <li>More monthly content updates</li>
+            <li>Advanced order management</li>
+            <li>Inventory management</li>
+            <li>Customer database/CRM</li>
+            <li>Sales reports</li>
+            <li>Revenue analytics</li>
+            <li>Automated SMS campaigns</li>
+            <li>Automated email campaigns</li>
+            <li>Marketing tools</li>
+            <li>Advanced booking system</li>
+            <li>Multiple payment options</li>
+            <li>API access</li>
+            <li>Webhooks</li>
+            <li>Custom integrations</li>
+            <li>Custom business workflows</li>
+            <li>Higher limits</li>
             <li>Priority support</li>
           </ul>
-          <button class="show-more-btn">Show all 18 features</button>
+          <button class="show-more-btn">Show all 20 features</button>
 
           <div class="plan-fine">One-time setup: ₦5,000 · Custom domain: additional</div>
 
           <button class="choose-btn filled plan-choose">Choose Business</button>
         </article>
 
-        <!-- ================= PRO ================= -->
-        <article class="plan-card" data-plan="Fission Pro">
+        <!-- ================= CUSTOM ================= -->
+        <article class="plan-card" data-plan="Fission Custom">
           <div class="plan-head">
-            <span class="plan-dot" style="background:#A855F7"></span>
-            <h3>Fission Pro</h3>
+            <span class="plan-dot" style="background:#F59E0B"></span>
+            <h3>Fission Custom</h3>
           </div>
-          <p class="plan-tagline">For businesses that want to sell online.</p>
+          <p class="plan-tagline">For companies that need something beyond the normal Fission plans.</p>
 
           <div class="plan-price">
-            <span class="amount" style="font-size:19px;">Custom pricing</span>
+            <span class="amount" style="font-size:19px;">Starting from ₦1,500,000+</span>
           </div>
 
-          <p class="includes-label">Everything in Business, plus:</p>
+          <p class="includes-label">Includes:</p>
           <ul class="feat-list" data-max="6">
-            <li>50+ pages</li>
-            <li>Full online store</li>
-            <li>Product management</li>
-            <li>Categories</li>
-            <li>Product variations</li>
-            <li>Shopping cart</li>
-            <li>Checkout</li>
-            <li>Online payments</li>
-            <li>Order management</li>
-            <li>Inventory management</li>
-            <li>Customer accounts</li>
-            <li>Discount codes</li>
-            <li>Sales dashboard</li>
-            <li>Revenue analytics</li>
-            <li>Abandoned-cart tracking</li>
-            <li>Invoices/receipts</li>
-            <li>Advanced customer management</li>
-            <li>Priority support</li>
+            <li>Custom platform</li>
+            <li>Custom dashboard</li>
+            <li>Custom features</li>
+            <li>Custom integrations</li>
+            <li>API development</li>
+            <li>Dedicated infrastructure</li>
+            <li>Custom design</li>
+            <li>Advanced security</li>
+            <li>Dedicated support</li>
           </ul>
-          <button class="show-more-btn">Show all 18 features</button>
-
-          <div class="plan-fine">One-time setup: ₦5,000 · Custom domain: additional</div>
+          <button class="show-more-btn">Show all 9 features</button>
 
           <button class="choose-btn plan-choose" data-quote="true">Request a Quote</button>
         </article>
@@ -1206,7 +1244,7 @@
   <div class="sticky-bar" id="stickyBar">
     <div class="info">
       <div class="plan" id="stickyPlan">Fission Starter</div>
-      <div class="price" id="stickyPrice">$1.30/day</div>
+      <div class="price" id="stickyPrice">₦1,000/day</div>
     </div>
     <button class="continue-btn" id="continueBtn">Continue →</button>
   </div>
@@ -1242,17 +1280,46 @@
     });
   });
 
-  // ---------- Billing frequency toggle (Starter plan) ----------
-  var starterPrices = {
-    day:   { amount: '$1.30', per: '/ day' },
-    week:  { amount: '$9.01', per: '/ week' },
-    month: { amount: '$39',   per: '/ month' },
-    year:  { amount: '$390',  per: '/ year' }
+  // ---------- Billing frequency toggle (all metered plans) ----------
+  var planPrices = {
+    'Fission Starter': {
+      day:   { amount: '₦1,000',   per: '/ day' },
+      week:  { amount: '₦6,500',   per: '/ week' },
+      month: { amount: '₦20,000',  per: '/ month' },
+      year:  { amount: '₦200,000', per: '/ year' }
+    },
+    'Fission Pro': {
+      day:   { amount: '₦1,500',   per: '/ day' },
+      week:  { amount: '₦9,000',   per: '/ week' },
+      month: { amount: '₦30,000',  per: '/ month' },
+      year:  { amount: '₦300,000', per: '/ year' }
+    },
+    'Fission Business': {
+      day:   { amount: '₦2,500',   per: '/ day' },
+      week:  { amount: '₦15,000',  per: '/ week' },
+      month: { amount: '₦50,000',  per: '/ month' },
+      year:  { amount: '₦500,000', per: '/ year' }
+    }
   };
   var freqTabs = document.querySelectorAll('.freq-tab');
-  var starterAmount = document.getElementById('starterAmount');
-  var starterPer = document.getElementById('starterPer');
   var currentFreq = 'day';
+
+  function applyFreq(freq){
+    document.querySelectorAll('.plan-card[data-plan]').forEach(function(card){
+      var prices = planPrices[card.dataset.plan];
+      if (!prices) return; // e.g. Fission Custom has no metered pricing
+      var amountEl = card.querySelector('[data-freq-amount]');
+      var perEl = card.querySelector('[data-freq-per]');
+      if (!amountEl || !perEl) return;
+      var p = prices[freq];
+      amountEl.style.opacity = 0;
+      setTimeout(function(){
+        amountEl.textContent = p.amount;
+        perEl.textContent = p.per;
+        amountEl.style.opacity = 1;
+      }, 120);
+    });
+  }
 
   freqTabs.forEach(function(tab){
     tab.addEventListener('click', function(){
@@ -1260,13 +1327,7 @@
       tab.classList.add('active');
       tab.setAttribute('aria-selected','true');
       currentFreq = tab.dataset.freq;
-      var p = starterPrices[currentFreq];
-      starterAmount.style.opacity = 0;
-      setTimeout(function(){
-        starterAmount.textContent = p.amount;
-        starterPer.textContent = p.per;
-        starterAmount.style.opacity = 1;
-      }, 120);
+      applyFreq(currentFreq);
     });
   });
 
@@ -1325,10 +1386,10 @@
       btn.textContent = 'Selected ✓';
 
       var priceText;
-      if (planName === 'Fission Starter') {
-        priceText = starterPrices[currentFreq].amount + ' ' + starterPrices[currentFreq].per;
+      if (planPrices[planName]) {
+        priceText = planPrices[planName][currentFreq].amount + ' ' + planPrices[planName][currentFreq].per;
       } else {
-        priceText = '$39 / month';
+        priceText = 'Starting from ₦1,500,000+';
       }
 
       selectedPlanName = planName;
