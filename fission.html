@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fission — Get your business online without the huge upfront cost</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF9F4;
+    --paper-dim:#F3F0E8;
+    --ink:#17171A;
+    --ink-soft:#55555B;
+    --ink-faint:#8B8B90;
+    --line:#E3E0D5;
+    --line-dark:#33333A;
+    --energy:#FF5A36;
+    --energy-dim:#FFE6DE;
+    --trust:#0F6E4F;
+    --trust-dim:#DFF0E7;
+    --wa:#25D366;
+    --wa-bubble:#DCF8C6;
+    --radius:14px;
+    --max:1120px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Source Serif 4', Georgia, serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk', sans-serif;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+
+  .mono{
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  a{color:inherit;}
+  button{font-family:inherit;}
+
+  :focus-visible{
+    outline:2.5px solid var(--energy);
+    outline-offset:3px;
+  }
+
+  .wrap{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(251,249,244,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:16px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .logo{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:22px;
+    text-decoration:none;
+    color:var(--ink);
+  }
+  .logo .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--energy);
+    display:inline-block;
+  }
+  .nav-links{
+    display:flex;
+    align-items:center;
+    gap:28px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14.5px;
+  }
+  .nav-links a{
+    text-decoration:none;
+    color:var(--ink-soft);
+  }
+  .nav-links a:hover{color:var(--ink);}
+  .btn{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    border:none;
+    border-radius:999px;
+    padding:11px 22px;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .btn-primary{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .btn-primary:hover{ background:#000; transform:translateY(-1px);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink);
+    border:1.5px solid var(--line);
+  }
+  .btn-ghost:hover{border-color:var(--ink);}
+  @media (max-width:760px){
+    .nav-links a.hide-mobile{display:none;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:76px 0 40px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px;height:1px;
+    background:var(--ink-faint);
+    display:inline-block;
+  }
+  .hero h1{
+    font-size:clamp(34px, 5.4vw, 60px);
+    font-weight:700;
+    line-height:1.05;
+    max-width:15ch;
+  }
+  .hero .accent{color:var(--energy);}
+  .hero p.lede{
+    font-size:19px;
+    color:var(--ink-soft);
+    max-width:46ch;
+    margin-top:22px;
+  }
+  .hero-cta{
+    display:flex;
+    gap:14px;
+    margin-top:32px;
+    flex-wrap:wrap;
+  }
+
+  /* ---------- METER (signature element) ---------- */
+  .meter{
+    margin-top:56px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--paper-dim);
+    padding:28px;
+    position:relative;
+    overflow:hidden;
+  }
+  .meter-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  .meter-label{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14px;
+    color:var(--ink-soft);
+  }
+  .freq-tabs{
+    display:inline-flex;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:4px;
+    gap:2px;
+  }
+  .freq-tab{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:13.5px;
+    font-weight:600;
+    border:none;
+    background:transparent;
+    color:var(--ink-soft);
+    padding:8px 15px;
+    border-radius:999px;
+    cursor:pointer;
+    position:relative;
+    white-space:nowrap;
+  }
+  .freq-tab[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .freq-tab .tag{
+    display:block;
+    font-size:9.5px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    font-weight:600;
+    color:var(--energy);
+    margin-top:1px;
+  }
+  .freq-tab[aria-pressed="true"] .tag{ color:#FFB199; }
+
+  .meter-readout{
+    margin-top:26px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:end;
+    gap:20px;
+  }
+  .price-ring{
+    position:relative;
+    display:inline-block;
+  }
+  .price-ring::before{
+    content:"";
+    position:absolute;
+    inset:-18px;
+    border-radius:50%;
+    background:radial-gradient(circle, var(--energy-dim) 0%, transparent 70%);
+    opacity:0;
+    transform:scale(0.6);
+  }
+  .price-ring.pulse::before{
+    animation:ring 0.6s ease-out;
+  }
+  @keyframes ring{
+    0%{opacity:0.9; transform:scale(0.5);}
+    100%{opacity:0; transform:scale(1.3);}
+  }
+  .price-big{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(38px, 5vw, 56px);
+    position:relative;
+    z-index:1;
+  }
+  .price-sub{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--ink-faint);
+    margin-top:4px;
+  }
+  .price-plan{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-faint);
+    text-align:right;
+  }
+  .price-plan b{color:var(--ink);}
+
+  .meter-compare{
+    margin-top:22px;
+    padding-top:18px;
+    border-top:1px dashed var(--line);
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+  }
+  .compare-item{color:var(--ink-soft);}
+  .compare-item .strike{
+    text-decoration:line-through;
+    color:var(--ink-faint);
+  }
+  .compare-item b{color:var(--ink);}
+
+  /* ---------- FEATURE STRIP ---------- */
+  .strip{
+    padding:20px 0 70px;
+  }
+  .strip-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .strip-item{
+    background:var(--paper);
+    padding:22px;
+  }
+  .strip-item h4{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:15px;
+    margin:0 0 6px;
+  }
+  .strip-item p{
+    margin:0;
+    font-size:14.5px;
+    color:var(--ink-soft);
+  }
+  @media (max-width:700px){
+    .strip-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section{padding:88px 0;}
+  .section-head{
+    max-width:56ch;
+    margin-bottom:48px;
+  }
+  .section-head .eyebrow{margin-bottom:14px;}
+  .section-head h2{
+    font-size:clamp(26px,3.4vw,38px);
+    font-weight:700;
+  }
+  .section-head p{
+    color:var(--ink-soft);
+    margin-top:14px;
+    font-size:17px;
+  }
+
+  /* ---------- PROCESS (dark) ---------- */
+  .process{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .process .eyebrow{color:#9A9AA0;}
+  .process .eyebrow::before{background:#9A9AA0;}
+  .process .section-head h2{color:var(--paper);}
+  .process .section-head p{color:#B7B7BC;}
+
+  .steps{
+    border-top:1px solid var(--line-dark);
+  }
+  .step{
+    display:grid;
+    grid-template-columns:64px 1fr;
+    gap:22px;
+    padding:26px 0;
+    border-bottom:1px solid var(--line-dark);
+    align-items:start;
+  }
+  .step-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:15px;
+    color:var(--energy);
+    padding-top:2px;
+  }
+  .step h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:19px;
+    font-weight:600;
+    color:var(--paper);
+  }
+  .step p{
+    margin:8px 0 0;
+    color:#B7B7BC;
+    font-size:15.5px;
+    max-width:60ch;
+  }
+  .step-note{
+    margin-top:18px;
+    padding-top:18px;
+    border-top:1px solid var(--line-dark);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:#8F8F95;
+  }
+
+  /* ---------- PACKAGES ---------- */
+  .pack-toggle-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:16px;
+    margin-bottom:36px;
+  }
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+  @media (max-width:860px){
+    .cards{grid-template-columns:1fr;}
+  }
+  .card{
+    border:1.5px solid var(--line);
+    border-radius:var(--radius);
+    padding:28px;
+    background:var(--paper);
+    display:flex;
+    flex-direction:column;
+  }
+  .card.featured{
+    border-color:var(--ink);
+    background:var(--paper-dim);
+    position:relative;
+  }
+  .card-badge{
+    position:absolute;
+    top:-13px;
+    left:26px;
+    background:var(--energy);
+    color:var(--paper);
+    font-family:'Space Grotesk', sans-serif;
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+    padding:5px 12px;
+    border-radius:999px;
+  }
+  .card h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:20px;
+    font-weight:700;
+  }
+  .card .desc{
+    color:var(--ink-soft);
+    font-size:14.5px;
+    margin-top:6px;
+  }
+  .card .price-row{
+    margin-top:22px;
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+  }
+  .card .price{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:34px;
+    font-weight:700;
+  }
+  .card .per{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--ink-faint);
+  }
+  .card .price-eq{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-faint);
+    margin-top:4px;
+  }
+  .card ul{
+    list-style:none;
+    margin:22px 0 0;
+    padding:0;
+    flex-grow:1;
+  }
+  .card li{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    font-size:14.5px;
+    color:var(--ink-soft);
+    padding:7px 0;
+  }
+  .card li svg{flex-shrink:0; margin-top:3px;}
+  .card .btn{
+    margin-top:24px;
+    width:100%;
+    justify-content:center;
+  }
+
+  /* ---------- DOMAIN ---------- */
+  .domain-cards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  @media (max-width:700px){ .domain-cards{grid-template-columns:1fr;} }
+  .dcard{
+    border:1.5px solid var(--line);
+    border-radius:var(--radius);
+    padding:26px;
+  }
+  .dcard h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .dcard .url{
+    display:inline-block;
+    margin-top:14px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    background:var(--paper-dim);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 12px;
+  }
+  .dcard p.d{
+    color:var(--ink-soft);
+    font-size:14.5px;
+    margin-top:14px;
+  }
+  .price-chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    padding:4px 10px;
+    border-radius:999px;
+  }
+  .price-chip.free{ background:var(--trust-dim); color:var(--trust); }
+  .price-chip.paid{ background:var(--energy-dim); color:var(--energy); }
+
+  /* ---------- EXAMPLE ---------- */
+  .example-grid{
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:36px;
+    align-items:center;
+  }
+  @media (max-width:860px){
+    .example-grid{grid-template-columns:1fr;}
+  }
+  .browser{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    background:var(--paper);
+    box-shadow:0 20px 50px -25px rgba(23,23,26,0.35);
+  }
+  .browser-bar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 14px;
+    background:var(--paper-dim);
+    border-bottom:1px solid var(--line);
+  }
+  .browser-bar .dots{display:flex; gap:6px;}
+  .browser-bar .dots span{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--line);
+  }
+  .browser-bar .url{
+    flex-grow:1;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:5px 10px;
+    text-align:center;
+  }
+  .site-mock{padding:0;}
+  .site-nav{
+    display:flex;
+    gap:18px;
+    padding:16px 20px;
+    border-bottom:1px solid var(--line);
+    font-family:'Space Grotesk', sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .site-nav b{color:var(--ink);}
+  .site-hero{
+    height:150px;
+    background:
+      linear-gradient(135deg, #F1DCC9 0%, #E7B896 45%, #C98A5F 100%);
+    display:flex;
+    align-items:flex-end;
+    padding:16px 20px;
+  }
+  .site-hero span{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:20px;
+    color:#fff;
+    text-shadow:0 2px 10px rgba(0,0,0,0.25);
+  }
+  .site-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    padding:16px 20px;
+  }
+  .site-grid div{
+    aspect-ratio:1;
+    border-radius:6px;
+    background:var(--paper-dim);
+    border:1px solid var(--line);
+  }
+  .site-grid div:nth-child(1){background:#EADFCB;}
+  .site-grid div:nth-child(2){background:#E3CBB6;}
+  .site-grid div:nth-child(3){background:#D9B79C;}
+  .wa-float{
+    display:flex;
+    justify-content:flex-end;
+    padding:0 20px 18px;
+  }
+  .wa-btn{
+    width:38px;height:38px;
+    border-radius:50%;
+    background:var(--wa);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .example-copy .tag-list{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
+  .tag-pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:5px 12px;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- WHATSAPP MOMENT ---------- */
+  .wa-section{
+    background:var(--paper-dim);
+  }
+  .wa-grid{
+    display:grid;
+    grid-template-columns:0.9fr 1.1fr;
+    gap:40px;
+    align-items:center;
+  }
+  @media (max-width:860px){ .wa-grid{grid-template-columns:1fr;} }
+  .phone{
+    max-width:300px;
+    margin:0 auto;
+    border:10px solid var(--ink);
+    border-radius:32px;
+    overflow:hidden;
+    background:#ECE5DD;
+    box-shadow:0 25px 60px -30px rgba(23,23,26,0.5);
+  }
+  .phone-head{
+    background:#075E54;
+    color:#fff;
+    padding:14px 16px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .phone-head .av{
+    width:28px;height:28px;border-radius:50%;
+    background:var(--energy);
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;color:#fff;
+  }
+  .phone-body{padding:18px 14px; min-height:220px;}
+  .bubble{
+    background:var(--wa-bubble);
+    border-radius:10px 10px 10px 2px;
+    padding:11px 13px;
+    max-width:85%;
+    font-family:'Source Serif 4', serif;
+    font-size:14.5px;
+    line-height:1.45;
+    box-shadow:0 1px 1px rgba(0,0,0,0.06);
+  }
+  .bubble + .bubble{ margin-top:10px; }
+  .bubble .link{
+    display:block;
+    margin-top:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:#0B5FA5;
+    text-decoration:underline;
+  }
+  .bubble .time{
+    display:block;
+    text-align:right;
+    font-size:10.5px;
+    color:var(--ink-faint);
+    margin-top:5px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  /* ---------- RECURRING ---------- */
+  .recur-list{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+    margin-top:8px;
+  }
+  @media (max-width:700px){ .recur-list{grid-template-columns:1fr;} }
+  .recur-item{
+    display:flex;
+    gap:12px;
+    padding:16px;
+    border:1px solid var(--line);
+    border-radius:10px;
+  }
+  .recur-item h4{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14.5px;
+    margin:0 0 4px;
+  }
+  .recur-item p{
+    margin:0;
+    font-size:13.5px;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- FOOTER CTA ---------- */
+  .final{
+    background:var(--ink);
+    color:var(--paper);
+    text-align:center;
+    padding:100px 0 60px;
+  }
+  .final h2{
+    font-size:clamp(28px,4.4vw,46px);
+    max-width:16ch;
+    margin:0 auto;
+  }
+  .final p{
+    color:#B7B7BC;
+    margin-top:16px;
+    max-width:44ch;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .final .hero-cta{justify-content:center; margin-top:30px;}
+  .final .btn-ghost{ border-color:var(--line-dark); color:var(--paper); }
+
+  footer.foot{
+    background:var(--ink);
+    border-top:1px solid var(--line-dark);
+    padding:26px 0 40px;
+  }
+  .foot-inner{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:#8F8F95;
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="logo"><span class="dot"></span>Fission</a>
+    <nav class="nav-links">
+      <a href="#how" class="hide-mobile">How it works</a>
+      <a href="#packages" class="hide-mobile">Packages</a>
+      <a href="#example" class="hide-mobile">Examples</a>
+      <a href="#packages" class="btn btn-primary">Get started</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Websites for small business, built by hand</p>
+      <h1>Get your business online without the <span class="accent">huge upfront cost.</span></h1>
+      <p class="lede">Fission builds and ships your website, then keeps it running for a price that matches how you pay — daily, weekly, monthly, or yearly. No design tool to learn. No lump sum to save up for.</p>
+      <div class="hero-cta">
+        <a href="#packages" class="btn btn-primary">Choose a package</a>
+        <a href="#how" class="btn btn-ghost">See how it works</a>
+      </div>
+
+      <!-- SIGNATURE METER -->
+      <div class="meter">
+        <div class="meter-top">
+          <div>
+            <div class="meter-label">One website. Paid your way.</div>
+          </div>
+          <div class="freq-tabs" role="group" aria-label="Choose payment frequency" id="freqTabs">
+            <button class="freq-tab" data-freq="daily" aria-pressed="false">Daily</button>
+            <button class="freq-tab" data-freq="weekly" aria-pressed="false">Weekly</button>
+            <button class="freq-tab" data-freq="monthly" aria-pressed="true">Monthly<span class="tag">Recommended</span></button>
+            <button class="freq-tab" data-freq="yearly" aria-pressed="false">Yearly<span class="tag">Best value</span></button>
+          </div>
+        </div>
+
+        <div class="meter-readout">
+          <div class="price-ring" id="priceRing">
+            <div class="price-big"><span id="priceMain">$39</span><span class="mono" id="priceUnit" style="font-size:16px; color:var(--ink-faint);">/month</span></div>
+            <div class="price-sub" id="priceEq">≈ $39.00 total this month</div>
+          </div>
+          <div class="price-plan">shown: <b>Business plan</b><br>switch below to compare packages</div>
+        </div>
+
+        <div class="meter-compare">
+          <div class="compare-item">Typical agency website: <span class="strike">$2,500 upfront</span></div>
+          <div class="compare-item">Fission: <b>$0 upfront</b>, cancel anytime</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE STRIP -->
+  <section class="strip">
+    <div class="wrap">
+      <div class="strip-grid">
+        <div class="strip-item">
+          <h4>No huge upfront cost</h4>
+          <p>Pay in small amounts as you go instead of one large bill before your site exists.</p>
+        </div>
+        <div class="strip-item">
+          <h4>Built by people, not a template tool</h4>
+          <p>A person on our team builds your site by hand. You never touch a drag-and-drop editor.</p>
+        </div>
+        <div class="strip-item">
+          <h4>Delivered to your WhatsApp</h4>
+          <p>When it's ready, we send you the link directly. No accounts, no dashboards to learn.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section process" id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">The process</p>
+        <h2>From "I need a website" to a live link, in six moves.</h2>
+        <p>Every order follows the same path. You make a few choices, hand us your business details, and we take it from there.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num mono">01</div>
+          <div><h3>Choose your package</h3><p>Pick the plan that matches how big a site your business needs.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num mono">02</div>
+          <div><h3>Choose how you pay</h3><p>Daily, weekly, monthly, or yearly. Monthly is the most common choice; yearly costs the least overall.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num mono">03</div>
+          <div><h3>Choose your address</h3><p>A free Fission address, or your own custom domain, which we buy and renew for you.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num mono">04</div>
+          <div><h3>Pay online</h3><p>Your order is created the moment payment is confirmed.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num mono">05</div>
+          <div><h3>Tell us about your business</h3><p>Name, logo, photos, services, prices, phone number, WhatsApp, address, and social accounts.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num mono">06</div>
+          <div><h3>We build it and send you the link</h3><p>We build your site, put it online, and message you when it's ready. From there, we keep it running and make changes as your business grows.</p></div>
+        </div>
+      </div>
+
+      <div class="step-note">Steps 01–04 happen on this site. Steps 05 and 06 happen with a real person on our team.</div>
+    </div>
+  </section>
+
+  <!-- PACKAGES -->
+  <section class="section" id="packages">
+    <div class="wrap">
+      <div class="pack-toggle-row">
+        <div class="section-head" style="margin-bottom:0;">
+          <p class="eyebrow">Packages</p>
+          <h2>Pick a package</h2>
+          <p>Every price below updates instantly with how you choose to pay.</p>
+        </div>
+        <div class="freq-tabs" role="group" aria-label="Choose payment frequency" id="freqTabs2">
+          <button class="freq-tab" data-freq="daily" aria-pressed="false">Daily</button>
+          <button class="freq-tab" data-freq="weekly" aria-pressed="false">Weekly</button>
+          <button class="freq-tab" data-freq="monthly" aria-pressed="true">Monthly</button>
+          <button class="freq-tab" data-freq="yearly" aria-pressed="false">Yearly</button>
+        </div>
+      </div>
+
+      <div class="cards">
+        <div class="card" data-plan="starter">
+          <h3>Starter</h3>
+          <p class="desc">A clean, simple site for a business just getting online.</p>
+          <div class="price-row"><span class="price"><span class="amt">$20</span></span><span class="per unit">/month</span></div>
+          <div class="price-eq eq">≈ $20.00 total this month</div>
+          <ul>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 3 business pages</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> WhatsApp button, contact form, Google Maps</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Basic analytics + basic SEO setup</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 1 website update / month</li>
+          </ul>
+          <a href="#" class="btn btn-ghost">Start with Starter</a>
+        </div>
+
+        <div class="card featured" data-plan="business">
+          <span class="card-badge">Recommended</span>
+          <h3>Business</h3>
+          <p class="desc">The most common choice for an active, growing business.</p>
+          <div class="price-row"><span class="price"><span class="amt">$39</span></span><span class="per unit">/month</span></div>
+          <div class="price-eq eq">≈ $39.00 total this month</div>
+          <ul>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 7 business pages</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Photo gallery, testimonials, blog/news</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Booking system + product catalogue</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Advanced analytics, full SEO setup</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 3 website updates / month + priority support</li>
+          </ul>
+          <a href="#" class="btn btn-primary">Start with Business</a>
+        </div>
+
+        <div class="card" data-plan="pro">
+          <h3>Pro</h3>
+          <p class="desc">For businesses ready to sell online.</p>
+          <div class="price-row"><span class="price"><span class="amt">$59</span></span><span class="per unit">/month</span></div>
+          <div class="price-eq eq">≈ $59.00 total this month</div>
+          <ul>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 15 business pages</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Online store with online payments</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Orders dashboard</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Advanced analytics + advanced SEO</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0F6E4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 5 website updates / month + priority support</li>
+          </ul>
+          <a href="#" class="btn btn-ghost">Start with Pro</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOMAIN -->
+  <section class="section" style="padding-top:0;">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Your address</p>
+        <h2>Where your website lives</h2>
+        <p>Every package includes a working address. A custom domain costs a little more, since we buy and renew it on your behalf.</p>
+      </div>
+      <div class="domain-cards">
+        <div class="dcard">
+          <h3>Fission address <span class="price-chip free">Included</span></h3>
+          <span class="url">businessname.fission.site</span>
+          <p class="d">Live the moment your site is built. No extra cost, no renewal to manage.</p>
+        </div>
+        <div class="dcard">
+          <h3>Custom domain <span class="price-chip paid">+$4/mo</span></h3>
+          <span class="url">businessname.com</span>
+          <p class="d">Your own domain, purchased and renewed by us for as long as you're subscribed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXAMPLE -->
+  <section class="section" id="example">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">A real example</p>
+        <h2>What a finished site looks like</h2>
+        <p>ABC Fashion, a boutique clothing shop, chose the Business package and a custom domain.</p>
+      </div>
+
+      <div class="example-grid">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <div class="url">abcfashion.com</div>
+          </div>
+          <div class="site-mock">
+            <div class="site-nav"><b>ABC Fashion</b><span>Home</span><span>About</span><span>Products</span><span>Gallery</span><span>Contact</span></div>
+            <div class="site-hero"><span>New season, in store now</span></div>
+            <div class="site-grid"><div></div><div></div><div></div></div>
+            <div class="wa-float">
+              <div class="wa-btn" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 1 1-3.8-6.8L20 4l-1.1 3.9A7.96 7.96 0 0 1 20 12Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.5 9.5c.3 2.6 2.4 4.7 5 5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="example-copy">
+          <h3 style="font-family:'Space Grotesk',sans-serif; font-size:20px;">Home · About · Products · Gallery · Contact</h3>
+          <p style="color:var(--ink-soft); margin-top:10px;">Built from the business information ABC Fashion sent us: their name, logo, product photos, prices, and contact details. A WhatsApp button sits on every page so customers can message the shop directly.</p>
+          <div class="tag-list">
+            <span class="tag-pill">Business plan</span>
+            <span class="tag-pill">Custom domain</span>
+            <span class="tag-pill">Monthly billing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHATSAPP MOMENT -->
+  <section class="section wa-section">
+    <div class="wrap">
+      <div class="wa-grid">
+        <div class="phone">
+          <div class="phone-head"><div class="av">F</div>Fission</div>
+          <div class="phone-body">
+            <div class="bubble">Your Fission website is ready 🎉<span class="time">10:42</span></div>
+            <div class="bubble">Please check it here:<span class="link">abcfashion.com</span><span class="time">10:42</span></div>
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow">Delivery</p>
+          <h2 style="font-size:clamp(24px,3vw,32px);">We send you a link, not a file</h2>
+          <p style="color:var(--ink-soft); margin-top:14px; max-width:48ch;">When your site is live, we message you directly with the address. You open it, and it's your actual website — not a preview, not a mockup.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECURRING -->
+  <section class="section" style="padding-top:60px;">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">While you're subscribed</p>
+        <h2>Changes and upkeep, included</h2>
+        <p>Ask for a change, and we make it — within the limit of your plan.</p>
+      </div>
+      <div class="recur-list">
+        <div class="recur-item">
+          <div>
+            <h4>Your site stays online</h4>
+            <p>Hosting continues for as long as your subscription is active.</p>
+          </div>
+        </div>
+        <div class="recur-item">
+          <div>
+            <h4>Your domain stays active</h4>
+            <p>If you added a custom domain, we keep renewing it.</p>
+          </div>
+        </div>
+        <div class="recur-item">
+          <div>
+            <h4>Requests, handled directly</h4>
+            <p>"Change the phone number." "Add these three products." We do it.</p>
+          </div>
+        </div>
+        <div class="recur-item">
+          <div>
+            <h4>Support included</h4>
+            <p>The maintenance and support agreed to in your plan, ongoing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<section class="final" id="cta">
+  <div class="wrap">
+    <h2>Your business deserves a real website.</h2>
+    <p>Choose a package, tell us about your business, and we'll take it from there.</p>
+    <div class="hero-cta">
+      <a href="#packages" class="btn btn-primary">Choose a package</a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span>Fission — professionally built, managed websites for small business</span>
+    <span>Not selling hosting. Not selling domains. Selling a website that's taken care of.</span>
+  </div>
+</footer>
+
+<script>
+  const PACKAGES = {
+    starter:  { daily: 0.70, weekly: 5,    monthly: 20, yearly: 200 },
+    business: { daily: 1.30, weekly: 9.01, monthly: 39, yearly: 390 },
+    pro:      { daily: 2.00, weekly: 14,   monthly: 59, yearly: 590 }
+  };
+
+  const FREQ_LABEL = {
+    daily:   { unit: '/day',   noun: 'today' },
+    weekly:  { unit: '/week',  noun: 'this week' },
+    monthly: { unit: '/month', noun: 'this month' },
+    yearly:  { unit: '/year',  noun: 'this year' }
+  };
+
+  function amountFor(pkg, freq){
+    return pkg[freq];
+  }
+
+  function fmt(n, freq){
+    // whole dollars for monthly/yearly, cents for daily/weekly
+    if(freq === 'daily' || freq === 'weekly'){
+      return '$' + n.toFixed(2);
+    }
+    return '$' + Math.round(n).toLocaleString();
+  }
+
+  let currentFreq = 'monthly';
+
+  function paintAll(){
+    // hero meter, representative package = business
+    const amt = amountFor(PACKAGES.business, currentFreq);
+    document.getElementById('priceMain').textContent = fmt(amt, currentFreq);
+    document.getElementById('priceUnit').textContent = FREQ_LABEL[currentFreq].unit;
+    document.getElementById('priceEq').textContent =
+      '≈ ' + fmt(amt, currentFreq) + ' total ' + FREQ_LABEL[currentFreq].noun;
+
+    // pulse
+    const ring = document.getElementById('priceRing');
+    ring.classList.remove('pulse');
+    void ring.offsetWidth;
+    ring.classList.add('pulse');
+
+    // both tab groups
+    document.querySelectorAll('.freq-tab').forEach(btn=>{
+      btn.setAttribute('aria-pressed', btn.dataset.freq === currentFreq ? 'true' : 'false');
+    });
+
+    // package cards
+    document.querySelectorAll('.card[data-plan]').forEach(card=>{
+      const plan = card.dataset.plan;
+      const a = amountFor(PACKAGES[plan], currentFreq);
+      card.querySelector('.amt').textContent = fmt(a, currentFreq);
+      card.querySelector('.unit').textContent = FREQ_LABEL[currentFreq].unit;
+      card.querySelector('.eq').textContent =
+        '≈ ' + fmt(a, currentFreq) + ' total ' + FREQ_LABEL[currentFreq].noun;
+    });
+  }
+
+  document.querySelectorAll('.freq-tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      currentFreq = btn.dataset.freq;
+      paintAll();
+    });
+  });
+
+  paintAll();
+</script>
+
+</body>
+</html>
