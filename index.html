@@ -101,6 +101,223 @@
   .menu-btn.open span:nth-child(2){opacity:0;}
   .menu-btn.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg);}
 
+  .nav-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    position:relative;
+  }
+  .account-btn{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    background:#fff;
+    border:1.5px solid var(--line);
+    border-radius:999px;
+    padding:7px 13px 7px 7px;
+    font-weight:700;
+    font-size:12.5px;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .account-btn:hover{border-color:var(--purple); color:var(--purple);}
+  .account-avatar{
+    width:22px;height:22px;
+    border-radius:50%;
+    background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:800;
+    flex-shrink:0;
+  }
+  .account-dropdown{
+    position:absolute;
+    top:42px;
+    right:0;
+    width:190px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    box-shadow:0 12px 26px -10px rgba(20,20,31,0.3);
+    padding:10px;
+    display:none;
+    z-index:60;
+  }
+  .account-dropdown.open{display:block;}
+  .account-dropdown .ad-email{
+    font-size:11.5px;
+    color:var(--ink-faint);
+    padding:4px 8px 8px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:6px;
+    word-break:break-all;
+  }
+  .account-dropdown .ad-logout{
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    padding:8px;
+    border-radius:8px;
+    font-weight:700;
+    font-size:13px;
+    color:#DC2626;
+    cursor:pointer;
+  }
+  .account-dropdown .ad-logout:hover{background:#FEF2F2;}
+
+  /* ---------- AUTH MODAL ---------- */
+  .auth-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(20,20,31,0.55);
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    z-index:100;
+    padding:0;
+  }
+  .auth-overlay.open{display:flex;}
+  .auth-modal{
+    width:100%;
+    max-width:var(--max);
+    background:#fff;
+    border-radius:22px 22px 0 0;
+    padding:26px 22px 30px;
+    position:relative;
+    max-height:88vh;
+    overflow-y:auto;
+    animation:auth-rise 0.25s ease;
+  }
+  @keyframes auth-rise{
+    from{ transform:translateY(24px); opacity:0; }
+    to{ transform:translateY(0); opacity:1; }
+  }
+  .auth-close{
+    position:absolute;
+    top:16px; right:16px;
+    width:30px; height:30px;
+    border-radius:50%;
+    border:none;
+    background:var(--purple-light);
+    color:var(--purple);
+    font-size:18px;
+    line-height:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .auth-tabs{
+    display:flex;
+    gap:6px;
+    background:var(--bg);
+    border-radius:999px;
+    padding:4px;
+    margin:6px 0 16px;
+  }
+  .auth-tab{
+    flex:1;
+    background:none;
+    border:none;
+    padding:10px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:13.5px;
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .auth-tab.active{background:#fff; color:var(--purple); box-shadow:0 2px 8px rgba(20,20,31,0.08);}
+  .auth-sub{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin:0 0 18px;
+    line-height:1.5;
+  }
+  .auth-form{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .auth-form label{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .auth-form input{
+    font-family:inherit;
+    font-size:14.5px;
+    padding:13px 14px;
+    border-radius:12px;
+    border:1.5px solid var(--line);
+    background:var(--bg);
+    color:var(--ink);
+  }
+  .auth-form input:focus{outline:none; border-color:var(--purple); background:#fff;}
+  .auth-submit{width:100%; margin-top:2px;}
+  .auth-submit[disabled]{opacity:0.6; cursor:not-allowed;}
+  .auth-error{
+    font-size:12.5px;
+    color:#DC2626;
+    background:#FEF2F2;
+    border-radius:10px;
+    padding:10px 12px;
+    margin:14px 0 0;
+  }
+  .auth-note{
+    font-size:12.5px;
+    color:#15803D;
+    background:var(--green-light);
+    border-radius:10px;
+    padding:10px 12px;
+    margin:14px 0 0;
+  }
+  .auth-switch{
+    text-align:center;
+    font-size:12.5px;
+    color:var(--ink-faint);
+    margin:16px 0 0;
+  }
+  .auth-switch button{
+    background:none;
+    border:none;
+    color:var(--purple);
+    font-weight:700;
+    cursor:pointer;
+    padding:0;
+    font-size:12.5px;
+  }
+  .otp-target{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin:-4px 0 2px;
+    line-height:1.5;
+  }
+  #otpCode{
+    text-align:center;
+    letter-spacing:8px;
+    font-size:20px;
+    font-weight:700;
+  }
+  .auth-resend{
+    width:100%;
+    background:none;
+    border:none;
+    padding:6px;
+    text-align:center;
+    font-weight:700;
+    font-size:12.5px;
+    color:var(--purple);
+    cursor:pointer;
+  }
+  .auth-resend[disabled]{color:var(--ink-faint); cursor:not-allowed;}
+
   /* ---------- MOBILE MENU ---------- */
   .mobile-menu{
     max-width:var(--max);
@@ -850,9 +1067,19 @@
       </svg>
       FISSION
     </div>
-    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="nav-actions">
+      <button class="account-btn" id="accountBtn">
+        <span class="account-avatar" id="accountAvatar">?</span>
+        <span id="accountLabel">Sign in</span>
+      </button>
+      <div class="account-dropdown" id="accountDropdown">
+        <div class="ad-email" id="accountEmail"></div>
+        <button class="ad-logout" id="logoutBtn">Log out</button>
+      </div>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </header>
 
   <nav class="mobile-menu" id="mobileMenu">
@@ -862,6 +1089,61 @@
     <a href="#dashboard" class="mm-link">Dashboard</a>
     <a href="#pricing" class="mm-link mm-cta">Get Started</a>
   </nav>
+
+  <!-- ---------- AUTH MODAL ---------- -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-modal">
+      <button class="auth-close" id="authClose" aria-label="Close">&times;</button>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="signup" id="tabSignup">Sign up</button>
+        <button class="auth-tab" data-tab="login" id="tabLogin">Log in</button>
+      </div>
+      <p class="auth-sub" id="authSub">Create a free account to choose a plan and get started.</p>
+
+      <form class="auth-form" id="signupForm">
+        <label>Full name
+          <input type="text" id="signupName" required placeholder="Jane Doe" autocomplete="name">
+        </label>
+        <label>Email
+          <input type="email" id="signupEmail" required placeholder="you@business.com" autocomplete="email">
+        </label>
+        <label>Password
+          <input type="password" id="signupPassword" required minlength="6" placeholder="At least 6 characters" autocomplete="new-password">
+        </label>
+        <button type="submit" class="btn btn-primary auth-submit" id="signupSubmit">Create account</button>
+      </form>
+
+      <form class="auth-form" id="loginForm" style="display:none;">
+        <label>Email
+          <input type="email" id="loginEmail" required placeholder="you@business.com" autocomplete="email">
+        </label>
+        <label>Password
+          <input type="password" id="loginPassword" required placeholder="Your password" autocomplete="current-password">
+        </label>
+        <button type="submit" class="btn btn-primary auth-submit" id="loginSubmit">Log in</button>
+      </form>
+
+      <form class="auth-form" id="otpForm" style="display:none;">
+        <p class="otp-target" id="otpTarget"></p>
+        <label>6-digit code
+          <input type="text" id="otpCode" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required placeholder="123456" autocomplete="one-time-code">
+        </label>
+        <button type="submit" class="btn btn-primary auth-submit" id="otpSubmit">Verify &amp; continue</button>
+        <button type="button" class="auth-resend" id="resendOtpBtn">Resend code</button>
+        <p class="auth-switch">
+          Wrong email? <button type="button" id="otpBackBtn">Edit signup details</button>
+        </p>
+      </form>
+
+      <p class="auth-error" id="authError" style="display:none;"></p>
+      <p class="auth-note" id="authNote" style="display:none;"></p>
+
+      <p class="auth-switch" id="authSwitch">
+        Already have an account? <button type="button" id="authSwitchBtn">Log in</button>
+      </p>
+    </div>
+  </div>
+
 
   <div class="wrap">
     <section class="hero">
@@ -1001,7 +1283,7 @@
           </ul>
           <button class="show-more-btn">Show all 20 features</button>
 
-          <div class="plan-fine">One-time setup: ₦5,000 · Custom domain: additional</div>
+          <div class="plan-fine">One-time setup: ₦5,000 (includes a free Fission subdomain) · Custom domain: extra, priced per domain</div>
 
           <button class="choose-btn filled plan-choose">Choose Starter</button>
         </article>
@@ -1049,7 +1331,7 @@
           </ul>
           <button class="show-more-btn">Show all 23 features</button>
 
-          <div class="plan-fine">One-time setup: ₦5,000 · Custom domain: additional</div>
+          <div class="plan-fine">One-time setup: ₦5,000 (includes a free Fission subdomain) · Custom domain: extra, priced per domain</div>
 
           <button class="choose-btn filled plan-choose">Choose Pro</button>
         </article>
@@ -1093,7 +1375,7 @@
           </ul>
           <button class="show-more-btn">Show all 20 features</button>
 
-          <div class="plan-fine">One-time setup: ₦5,000 · Custom domain: additional</div>
+          <div class="plan-fine">One-time setup: ₦5,000 (includes a free Fission subdomain) · Custom domain: extra, priced per domain</div>
 
           <button class="choose-btn filled plan-choose">Choose Business</button>
         </article>
@@ -1132,9 +1414,9 @@
       <div class="fee-note">
         <span class="item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
-          One-time setup fee: ₦5,000
+          One-time setup fee: ₦5,000 — includes a free Fission subdomain (e.g. yourbrand.fission.site)
         </span>
-        <span class="item">Custom domain: additional</span>
+        <span class="item">Want your own domain instead? Custom domains cost extra — the exact price depends on the domain you choose, and we'll quote it before you pay.</span>
       </div>
     </section>
 
@@ -1252,8 +1534,19 @@
   <div class="toast" id="toast"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
+  // ---------- Supabase ----------
+  // Note: the CDN global is `window.supabase` — our client is named
+  // `supabaseClient` throughout to avoid shadowing/naming collisions.
+  var SUPABASE_URL = 'https://peuhprnoszejkwtczzmv.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_BTPwUe4Cfe5UaTat8VP1Jw_YH5o4IMr';
+  var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  var currentSession = null;
+  var pendingPlanBtn = null;
+
   // ---------- Toast ----------
   var toastEl = document.getElementById('toast');
   var toastTimer;
@@ -1263,6 +1556,309 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2600);
   }
+
+  // ---------- Auth (Supabase) ----------
+  var authOverlay = document.getElementById('authOverlay');
+  var authClose = document.getElementById('authClose');
+  var tabSignup = document.getElementById('tabSignup');
+  var tabLogin = document.getElementById('tabLogin');
+  var authSub = document.getElementById('authSub');
+  var signupForm = document.getElementById('signupForm');
+  var loginForm = document.getElementById('loginForm');
+  var signupSubmit = document.getElementById('signupSubmit');
+  var loginSubmit = document.getElementById('loginSubmit');
+  var otpForm = document.getElementById('otpForm');
+  var otpTarget = document.getElementById('otpTarget');
+  var otpCodeInput = document.getElementById('otpCode');
+  var otpSubmit = document.getElementById('otpSubmit');
+  var resendOtpBtn = document.getElementById('resendOtpBtn');
+  var otpBackBtn = document.getElementById('otpBackBtn');
+  var authError = document.getElementById('authError');
+  var authNote = document.getElementById('authNote');
+  var authSwitch = document.getElementById('authSwitch');
+  var authSwitchBtn = document.getElementById('authSwitchBtn');
+
+  var accountBtn = document.getElementById('accountBtn');
+  var accountAvatar = document.getElementById('accountAvatar');
+  var accountLabel = document.getElementById('accountLabel');
+  var accountDropdown = document.getElementById('accountDropdown');
+  var accountEmail = document.getElementById('accountEmail');
+  var logoutBtn = document.getElementById('logoutBtn');
+
+  function clearAuthMessages(){
+    authError.style.display = 'none';
+    authError.textContent = '';
+    authNote.style.display = 'none';
+    authNote.textContent = '';
+  }
+
+  function showAuthError(msg){
+    authNote.style.display = 'none';
+    authError.textContent = msg;
+    authError.style.display = 'block';
+  }
+
+  function showAuthNote(msg){
+    authError.style.display = 'none';
+    authNote.textContent = msg;
+    authNote.style.display = 'block';
+  }
+
+  var pendingSignupEmail = null;
+  var resendCooldown = 0;
+  var resendTimer = null;
+
+  function switchAuthTab(tab){
+    clearAuthMessages();
+    tabSignup.style.display = 'block';
+    tabLogin.style.display = 'block';
+    authSwitch.style.display = 'block';
+    otpForm.style.display = 'none';
+    if (tab === 'login') {
+      tabLogin.classList.add('active');
+      tabSignup.classList.remove('active');
+      loginForm.style.display = 'flex';
+      signupForm.style.display = 'none';
+      authSub.textContent = 'Log in to choose a plan and pick up where you left off.';
+      authSwitch.innerHTML = 'New to Fission? <button type="button" id="authSwitchBtn2">Sign up</button>';
+      document.getElementById('authSwitchBtn2').addEventListener('click', function(){ switchAuthTab('signup'); });
+    } else if (tab === 'otp') {
+      tabSignup.style.display = 'none';
+      tabLogin.style.display = 'none';
+      authSwitch.style.display = 'none';
+      signupForm.style.display = 'none';
+      loginForm.style.display = 'none';
+      otpForm.style.display = 'flex';
+      otpTarget.textContent = 'Enter the 6-digit code we sent to ' + pendingSignupEmail + '.';
+      authSub.textContent = 'Almost there — verify your email to finish creating your account.';
+      otpCodeInput.value = '';
+      setTimeout(function(){ otpCodeInput.focus(); }, 50);
+    } else {
+      tabSignup.classList.add('active');
+      tabLogin.classList.remove('active');
+      signupForm.style.display = 'flex';
+      loginForm.style.display = 'none';
+      authSub.textContent = 'Create a free account to choose a plan and get started.';
+      authSwitch.innerHTML = 'Already have an account? <button type="button" id="authSwitchBtn2">Log in</button>';
+      document.getElementById('authSwitchBtn2').addEventListener('click', function(){ switchAuthTab('login'); });
+    }
+  }
+
+  function openAuthModal(tab){
+    switchAuthTab(tab || 'signup');
+    authOverlay.classList.add('open');
+  }
+
+  function closeAuthModal(){
+    authOverlay.classList.remove('open');
+    clearAuthMessages();
+  }
+
+  authClose.addEventListener('click', function(){
+    pendingPlanBtn = null;
+    clearInterval(resendTimer);
+    closeAuthModal();
+  });
+  authOverlay.addEventListener('click', function(e){
+    if (e.target === authOverlay) {
+      pendingPlanBtn = null;
+      clearInterval(resendTimer);
+      closeAuthModal();
+    }
+  });
+  tabSignup.addEventListener('click', function(){ switchAuthTab('signup'); });
+  tabLogin.addEventListener('click', function(){ switchAuthTab('login'); });
+  authSwitchBtn.addEventListener('click', function(){ switchAuthTab('login'); });
+
+  signupForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    clearAuthMessages();
+    var name = document.getElementById('signupName').value.trim();
+    var email = document.getElementById('signupEmail').value.trim();
+    var password = document.getElementById('signupPassword').value;
+
+    signupSubmit.disabled = true;
+    signupSubmit.textContent = 'Creating account…';
+
+    supabaseClient.auth.signUp({
+      email: email,
+      password: password,
+      options: { data: { full_name: name } }
+    }).then(function(res){
+      signupSubmit.disabled = false;
+      signupSubmit.textContent = 'Create account';
+      if (res.error) {
+        showAuthError(res.error.message);
+        return;
+      }
+      if (!res.data.session) {
+        // Email confirmation is on for this project — move to the
+        // OTP step so the person can enter the code from their inbox.
+        pendingSignupEmail = email;
+        switchAuthTab('otp');
+        startResendCooldown();
+      }
+      // If a session comes back immediately (confirmations off),
+      // onAuthStateChange below handles closing the modal and
+      // resuming the plan selection.
+    }).catch(function(err){
+      signupSubmit.disabled = false;
+      signupSubmit.textContent = 'Create account';
+      showAuthError('Something went wrong. Please try again.');
+    });
+  });
+
+  otpForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    clearAuthMessages();
+    var code = otpCodeInput.value.trim();
+
+    otpSubmit.disabled = true;
+    otpSubmit.textContent = 'Verifying…';
+
+    supabaseClient.auth.verifyOtp({
+      email: pendingSignupEmail,
+      token: code,
+      type: 'signup'
+    }).then(function(res){
+      otpSubmit.disabled = false;
+      otpSubmit.textContent = 'Verify & continue';
+      if (res.error) {
+        showAuthError(res.error.message);
+        return;
+      }
+      // Success sets a session — onAuthStateChange below closes the
+      // modal and resumes whichever plan the person was choosing.
+    }).catch(function(err){
+      otpSubmit.disabled = false;
+      otpSubmit.textContent = 'Verify & continue';
+      showAuthError('Something went wrong. Please try again.');
+    });
+  });
+
+  function startResendCooldown(){
+    resendCooldown = 30;
+    resendOtpBtn.disabled = true;
+    resendOtpBtn.textContent = 'Resend code (' + resendCooldown + 's)';
+    clearInterval(resendTimer);
+    resendTimer = setInterval(function(){
+      resendCooldown -= 1;
+      if (resendCooldown <= 0) {
+        clearInterval(resendTimer);
+        resendOtpBtn.disabled = false;
+        resendOtpBtn.textContent = 'Resend code';
+      } else {
+        resendOtpBtn.textContent = 'Resend code (' + resendCooldown + 's)';
+      }
+    }, 1000);
+  }
+
+  resendOtpBtn.addEventListener('click', function(){
+    if (resendCooldown > 0 || !pendingSignupEmail) return;
+    clearAuthMessages();
+    supabaseClient.auth.resend({
+      type: 'signup',
+      email: pendingSignupEmail
+    }).then(function(res){
+      if (res.error) {
+        showAuthError(res.error.message);
+        return;
+      }
+      showAuthNote('New code sent to ' + pendingSignupEmail + '.');
+      startResendCooldown();
+    });
+  });
+
+  otpBackBtn.addEventListener('click', function(){
+    switchAuthTab('signup');
+  });
+
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    clearAuthMessages();
+    var email = document.getElementById('loginEmail').value.trim();
+    var password = document.getElementById('loginPassword').value;
+
+    loginSubmit.disabled = true;
+    loginSubmit.textContent = 'Logging in…';
+
+    supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    }).then(function(res){
+      loginSubmit.disabled = false;
+      loginSubmit.textContent = 'Log in';
+      if (res.error) {
+        showAuthError(res.error.message);
+      }
+      // Success is handled by onAuthStateChange below.
+    }).catch(function(err){
+      loginSubmit.disabled = false;
+      loginSubmit.textContent = 'Log in';
+      showAuthError('Something went wrong. Please try again.');
+    });
+  });
+
+  function initialsFor(session){
+    var name = (session.user.user_metadata && session.user.user_metadata.full_name) || '';
+    var source = name || session.user.email || '?';
+    return source.trim().charAt(0).toUpperCase();
+  }
+
+  function updateAccountUI(){
+    if (currentSession) {
+      accountAvatar.textContent = initialsFor(currentSession);
+      accountLabel.textContent = (currentSession.user.user_metadata && currentSession.user.user_metadata.full_name) ?
+        currentSession.user.user_metadata.full_name.split(' ')[0] : 'Account';
+      accountEmail.textContent = currentSession.user.email;
+    } else {
+      accountAvatar.textContent = '?';
+      accountLabel.textContent = 'Sign in';
+      accountEmail.textContent = '';
+      accountDropdown.classList.remove('open');
+    }
+  }
+
+  accountBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    if (!currentSession) {
+      openAuthModal('signup');
+      return;
+    }
+    accountDropdown.classList.toggle('open');
+  });
+  document.addEventListener('click', function(){
+    accountDropdown.classList.remove('open');
+  });
+
+  logoutBtn.addEventListener('click', function(){
+    supabaseClient.auth.signOut().then(function(){
+      showToast('Logged out.');
+    });
+  });
+
+  // Keep the app in sync with Supabase's own auth state, and resume
+  // whatever plan the person was trying to choose before signing in.
+  supabaseClient.auth.onAuthStateChange(function(event, session){
+    currentSession = session;
+    updateAccountUI();
+
+    if (session && authOverlay.classList.contains('open')) {
+      var resumeBtn = pendingPlanBtn;
+      pendingPlanBtn = null;
+      closeAuthModal();
+      showToast('Signed in — welcome to Fission!');
+      if (resumeBtn && typeof handlePlanChoose === 'function') {
+        handlePlanChoose(resumeBtn);
+      }
+    }
+  });
+
+  // Restore any existing session on page load.
+  supabaseClient.auth.getSession().then(function(res){
+    currentSession = res.data.session;
+    updateAccountUI();
+  });
 
   // ---------- Mobile menu ----------
   var menuBtn = document.getElementById('menuBtn');
@@ -1357,47 +1953,75 @@
   var selectedPlanName = null;
   var selectedPlanPrice = null;
 
+  function handlePlanChoose(btn){
+    var card = btn.closest('.plan-card');
+    var planName = card.dataset.plan;
+
+    if (btn.dataset.quote) {
+      showToast('Thanks! We\'ll reach out with custom pricing for ' + planName + '.');
+      selectedPlanName = planName;
+      selectedPlanPrice = 'Custom pricing';
+      stickyPlan.textContent = planName;
+      stickyPrice.textContent = selectedPlanPrice;
+      stickyBar.classList.add('show');
+      savePlanSelection(planName, selectedPlanPrice, null);
+      return;
+    }
+
+    // clear other selections
+    document.querySelectorAll('.plan-card').forEach(function(c){ c.classList.remove('selected'); });
+    document.querySelectorAll('.plan-choose').forEach(function(b){
+      if (!b.dataset.quote){
+        b.classList.remove('is-selected');
+        b.textContent = 'Choose ' + b.closest('.plan-card').dataset.plan.replace('Fission ', '');
+      }
+    });
+
+    card.classList.add('selected');
+    btn.classList.add('is-selected');
+    btn.textContent = 'Selected ✓';
+
+    var priceText;
+    if (planPrices[planName]) {
+      priceText = planPrices[planName][currentFreq].amount + ' ' + planPrices[planName][currentFreq].per;
+    } else {
+      priceText = 'Starting from ₦1,500,000+';
+    }
+
+    selectedPlanName = planName;
+    selectedPlanPrice = priceText;
+    stickyPlan.textContent = planName;
+    stickyPrice.textContent = priceText;
+    stickyBar.classList.add('show');
+    showToast(planName + ' selected — scroll down to continue.');
+    savePlanSelection(planName, priceText, currentFreq);
+  }
+
+  // Best-effort save of the selection to Supabase. Requires a
+  // `plan_selections` table (see SQL in the project notes) — if it
+  // doesn't exist yet, this silently no-ops rather than breaking the UI.
+  function savePlanSelection(planName, priceLabel, billingFrequency){
+    if (!currentSession) return;
+    supabaseClient.from('plan_selections').insert({
+      user_id: currentSession.user.id,
+      plan_name: planName,
+      price_label: priceLabel,
+      billing_frequency: billingFrequency
+    }).then(function(res){
+      if (res.error) console.warn('Could not save plan selection:', res.error.message);
+    });
+  }
+
   document.querySelectorAll('.plan-choose').forEach(function(btn){
     btn.addEventListener('click', function(){
-      var card = btn.closest('.plan-card');
-      var planName = card.dataset.plan;
-
-      if (btn.dataset.quote) {
-        showToast('Thanks! We\'ll reach out with custom pricing for ' + planName + '.');
-        selectedPlanName = planName;
-        selectedPlanPrice = 'Custom pricing';
-        stickyPlan.textContent = planName;
-        stickyPrice.textContent = selectedPlanPrice;
-        stickyBar.classList.add('show');
+      // Require a signed-in account before a plan can be chosen or quoted.
+      if (!currentSession) {
+        pendingPlanBtn = btn;
+        showToast('Please sign up or log in to choose a plan.');
+        openAuthModal('signup');
         return;
       }
-
-      // clear other selections
-      document.querySelectorAll('.plan-card').forEach(function(c){ c.classList.remove('selected'); });
-      document.querySelectorAll('.plan-choose').forEach(function(b){
-        if (!b.dataset.quote){
-          b.classList.remove('is-selected');
-          b.textContent = 'Choose ' + b.closest('.plan-card').dataset.plan.replace('Fission ', '');
-        }
-      });
-
-      card.classList.add('selected');
-      btn.classList.add('is-selected');
-      btn.textContent = 'Selected ✓';
-
-      var priceText;
-      if (planPrices[planName]) {
-        priceText = planPrices[planName][currentFreq].amount + ' ' + planPrices[planName][currentFreq].per;
-      } else {
-        priceText = 'Starting from ₦1,500,000+';
-      }
-
-      selectedPlanName = planName;
-      selectedPlanPrice = priceText;
-      stickyPlan.textContent = planName;
-      stickyPrice.textContent = priceText;
-      stickyBar.classList.add('show');
-      showToast(planName + ' selected — scroll down to continue.');
+      handlePlanChoose(btn);
     });
   });
 
