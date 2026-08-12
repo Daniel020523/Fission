@@ -1514,14 +1514,16 @@
     });
   });
 
-  // If we were bounced here from dashboard.html (not signed in yet),
-  // this lets us auto-open the sign-up modal below.
+  // If we were bounced here from dashboard.html or admin.html (not
+  // signed in yet), this tells us where to send the person back to
+  // once they finish signing in, and lets us auto-open the modal below.
   var urlParams = new URLSearchParams(window.location.search);
+  var redirectTarget = urlParams.get('redirect');
 
   // Keep the app in sync with Supabase's own auth state. Any successful
   // sign up or log in completed through the modal sends the person to
-  // their dashboard — resuming a pending plan selection first if there
-  // was one.
+  // their dashboard (or back to admin.html, if that's where they came
+  // from) — resuming a pending plan selection first if there was one.
   supabaseClient.auth.onAuthStateChange(function(event, session){
     currentSession = session;
     updateAccountUI();
@@ -1536,7 +1538,7 @@
         return;
       }
       showToast('Signed in — taking you to your dashboard…');
-      window.location.href = 'dashboard.html';
+      window.location.href = redirectTarget === 'admin' ? 'admin.html' : 'dashboard.html';
     }
   });
 

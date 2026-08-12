@@ -529,6 +529,10 @@
               <span class="badge badge-green" id="doneBadge">Details received</span>
               <p class="sub" style="margin:10px 0 4px;">Thanks! Our team will reach out via <strong>email</strong> or <strong>WhatsApp</strong> shortly to get your site started.</p>
               <p class="sub" style="margin:0;" id="doneContactLine"></p>
+              <div id="websiteUrlBlock" style="display:none; margin-top:14px; padding-top:14px; border-top:1px solid var(--line);">
+                <div class="item-title" style="margin-bottom:4px;">🎉 Your website is live</div>
+                <a href="#" id="websiteUrlLink" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="margin-top:4px;">Visit your site</a>
+              </div>
             </div>
           </div>
 
@@ -899,6 +903,17 @@
       planCardSub.textContent = (row.price_label || 'Plan selected') + ' · Onboarding complete';
       document.getElementById('doneContactLine').textContent =
         "We'll contact you at " + row.contact_email + ' or ' + row.whatsapp_number + '.';
+
+      var websiteUrlBlock = document.getElementById('websiteUrlBlock');
+      var websiteUrlLink = document.getElementById('websiteUrlLink');
+      if (row.website_url) {
+        websiteUrlLink.href = row.website_url;
+        websiteUrlLink.textContent = 'Visit your site — ' + row.website_url;
+        websiteUrlBlock.style.display = 'block';
+      } else {
+        websiteUrlBlock.style.display = 'none';
+      }
+
       planStateDone.style.display = 'block';
     }
 
