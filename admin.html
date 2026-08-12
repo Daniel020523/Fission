@@ -326,21 +326,6 @@
   var SUPABASE_KEY = 'sb_publishable_BTPwUe4Cfe5UaTat8VP1Jw_YH5o4IMr';
   var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // ---------- Real visit tracking (visitors + page views) ----------
-  (function(){
-    try {
-      var vId = localStorage.getItem('fission_vid');
-      if (!vId) {
-        vId = 'v_' + Date.now().toString(36) + Math.random().toString(36).slice(2);
-        localStorage.setItem('fission_vid', vId);
-      }
-      supabaseClient.from('site_visits').insert({
-        visitor_id: vId,
-        page: location.pathname.split('/').pop() || 'admin.html'
-      });
-    } catch(e) { /* localStorage unavailable — skip tracking silently */ }
-  })();
-
   var gateScreen = document.getElementById('gateScreen');
   var gateSpinner = document.getElementById('gateSpinner');
   var gateMsg = document.getElementById('gateMsg');

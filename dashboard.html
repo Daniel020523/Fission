@@ -249,21 +249,6 @@
   .panel.active{ display:block; }
   @keyframes fade-in{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
 
-  .stat-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-    margin-bottom:22px;
-  }
-  @media (min-width:640px){ .stat-grid{ grid-template-columns:repeat(3,1fr); } }
-  .stat{
-    background:#fff; border:1px solid var(--line);
-    border-radius:var(--radius-md); padding:14px;
-  }
-  .stat .label{ font-size:11px; color:var(--ink-faint); font-weight:600; margin-bottom:6px; }
-  .stat .value{ font-size:21px; font-weight:800; }
-  .stat .delta{ font-size:11px; font-weight:700; color:var(--green); margin:3px 0 8px; }
-
   .card{
     background:#fff; border:1px solid var(--line);
     border-radius:var(--radius-md); padding:18px;
@@ -275,20 +260,6 @@
   }
   .card-head h3{ font-size:14.5px; font-weight:800; margin:0; }
   .card-head .sub{ font-size:11.5px; color:var(--ink-faint); margin:3px 0 0; }
-  .link-btn{
-    background:none; border:none; color:var(--purple);
-    font-weight:700; font-size:12.5px; cursor:pointer; padding:0;
-  }
-  .link-btn:hover{ text-decoration:underline; }
-
-  .activity-list{ display:flex; flex-direction:column; gap:10px; }
-  .act-row{
-    display:flex; justify-content:space-between; gap:10px;
-    font-size:12.5px; color:var(--ink-soft);
-    padding-bottom:10px; border-bottom:1px solid var(--line);
-  }
-  .act-row:last-child{ border-bottom:none; padding-bottom:0; }
-  .act-time{ color:var(--ink-faint); flex-shrink:0; }
 
   .btn{
     display:inline-flex; align-items:center; justify-content:center; gap:6px;
@@ -520,36 +491,6 @@
               </div>
             </div>
           </div>
-
-          <div class="stat-grid">
-            <div class="stat">
-              <div class="label">Visitors</div>
-              <div class="value" id="statVisitors">0</div>
-              <div class="delta" style="color:var(--ink-faint); font-weight:600;">Site-wide</div>
-            </div>
-            <div class="stat">
-              <div class="label">Page Views</div>
-              <div class="value" id="statPageViews">0</div>
-              <div class="delta" style="color:var(--ink-faint); font-weight:600;">Site-wide</div>
-            </div>
-            <div class="stat">
-              <div class="label">Leads</div>
-              <div class="value" id="statLeads">0</div>
-              <div class="delta" style="color:var(--ink-faint); font-weight:600;">Site-wide</div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3>Recent Activity</h3>
-                <p class="sub">Real events from your account</p>
-              </div>
-              <button class="link-btn" id="viewAllBtn">View all</button>
-            </div>
-            <div class="activity-list" id="activityList"></div>
-            <div class="empty-state" id="activityEmpty" style="display:none;">No activity yet.</div>
-          </div>
         </section>
 
         <!-- ================= MY WEBSITE PANEL ================= -->
@@ -651,21 +592,6 @@
   var SUPABASE_URL = 'https://peuhprnoszejkwtczzmv.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_BTPwUe4Cfe5UaTat8VP1Jw_YH5o4IMr';
   var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  // ---------- Real visit tracking (visitors + page views) ----------
-  (function(){
-    try {
-      var vId = localStorage.getItem('fission_vid');
-      if (!vId) {
-        vId = 'v_' + Date.now().toString(36) + Math.random().toString(36).slice(2);
-        localStorage.setItem('fission_vid', vId);
-      }
-      supabaseClient.from('site_visits').insert({
-        visitor_id: vId,
-        page: location.pathname.split('/').pop() || 'dashboard.html'
-      });
-    } catch(e) { /* localStorage unavailable — skip tracking silently */ }
-  })();
 
   var gateScreen = document.getElementById('gateScreen');
   var gateMsg = document.getElementById('gateMsg');
@@ -787,22 +713,16 @@
       supabaseClient.auth.signOut();
     });
 
-    // ----- Notifications (real: bell dropdown + Recent Activity card) -----
-    // A single `notifications` table backs both the bell (unread count +
-    // dropdown) and the Recent Activity feed (full history). Rows are
-    // created whenever something real happens on the account: a plan is
-    // selected, onboarding details are submitted, a message is sent, or
-    // the Fission team marks a message as seen.
+    // ----- Notifications (real: bell dropdown) -----
+    // Backed by the `notifications` table. Rows are created whenever
+    // something real happens on the account: a plan is selected,
+    // onboarding details are submitted, a message is sent, or the
+    // Fission team marks a message as seen.
     var bellBtn = document.getElementById('bellBtn');
     var bellDropdown = document.getElementById('bellDropdown');
     var bellDropdownContent = document.getElementById('bellDropdownContent');
     var bellCount = document.getElementById('bellCount');
-    var activityList = document.getElementById('activityList');
-    var activityEmpty = document.getElementById('activityEmpty');
-    var viewAllBtn = document.getElementById('viewAllBtn');
     var notifications = [];
-    var activityExpanded = false;
-    var ACTIVITY_PREVIEW_COUNT = 4;
 
     function timeAgo(iso){
       var diffMs = Date.now() - new Date(iso).getTime();
@@ -832,21 +752,6 @@
       }).join('');
     }
 
-    function renderActivity(){
-      if (!notifications.length) {
-        activityList.innerHTML = '';
-        activityEmpty.style.display = 'block';
-        viewAllBtn.style.display = 'none';
-        return;
-      }
-      activityEmpty.style.display = 'none';
-      viewAllBtn.style.display = notifications.length > ACTIVITY_PREVIEW_COUNT ? 'inline-flex' : 'none';
-      var list = activityExpanded ? notifications : notifications.slice(0, ACTIVITY_PREVIEW_COUNT);
-      activityList.innerHTML = list.map(function(n){
-        return '<div class="act-row"><span>' + escapeHtml(n.message) + '</span><span class="act-time">' + timeAgo(n.created_at) + '</span></div>';
-      }).join('');
-    }
-
     function loadNotifications(){
       supabaseClient.from('notifications').select('*')
         .eq('user_id', currentSession.user.id)
@@ -855,7 +760,6 @@
           if (res.error) { console.warn('Could not load notifications:', res.error.message); return; }
           notifications = res.data;
           renderBell();
-          renderActivity();
         });
     }
 
@@ -867,7 +771,6 @@
         if (res.error) { console.warn('Could not save notification:', res.error.message); return; }
         notifications.unshift(res.data);
         renderBell();
-        renderActivity();
       });
     }
 
@@ -885,12 +788,6 @@
           });
         }
       }
-    });
-
-    viewAllBtn.addEventListener('click', function(){
-      activityExpanded = !activityExpanded;
-      viewAllBtn.textContent = activityExpanded ? 'Hide' : 'View all';
-      renderActivity();
     });
 
     loadNotifications();
@@ -1071,28 +968,6 @@
     });
 
     loadWebsiteDetails();
-
-    // ----- Real stats (Visitors / Page Views / Leads) -----
-    // Site-wide, not per-account: every page load across index.html,
-    // dashboard.html and admin.html logs a row to `site_visits`
-    // (Visitors = distinct visitor_id, Page Views = total rows), and
-    // every plan chosen on the pricing page logs a row to `leads_log`.
-    function loadStats(){
-      supabaseClient.from('site_visits').select('visitor_id', { count: 'exact' })
-        .then(function(res){
-          if (res.error) { console.warn('Could not load visit stats:', res.error.message); return; }
-          var uniqueVisitors = new Set((res.data || []).map(function(r){ return r.visitor_id; })).size;
-          document.getElementById('statVisitors').textContent = uniqueVisitors.toLocaleString('en-NG');
-          document.getElementById('statPageViews').textContent = (res.count || 0).toLocaleString('en-NG');
-        });
-
-      supabaseClient.from('leads_log').select('id', { count: 'exact', head: true })
-        .then(function(res){
-          if (res.error) { console.warn('Could not load lead stats:', res.error.message); return; }
-          document.getElementById('statLeads').textContent = (res.count || 0).toLocaleString('en-NG');
-        });
-    }
-    loadStats();
 
     // ----- Message the Fission team (plan-based monthly quota) -----
     var MESSAGE_LIMITS = {
