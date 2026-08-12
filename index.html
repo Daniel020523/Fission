@@ -780,48 +780,6 @@
     color:#fff;
   }
 
-  /* ---------- STICKY SELECTION BAR ---------- */
-  .sticky-bar{
-    position:fixed;
-    left:0; right:0; bottom:0;
-    max-width:var(--max);
-    margin:0 auto;
-    background:var(--ink);
-    color:#fff;
-    padding:14px 18px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    border-radius:18px 18px 0 0;
-    box-shadow:0 -10px 30px -8px rgba(0,0,0,0.35);
-    transform:translateY(120%);
-    transition:transform 0.3s ease;
-    z-index:80;
-  }
-  .sticky-bar.show{transform:translateY(0);}
-  .sticky-bar .info{min-width:0;}
-  .sticky-bar .plan{
-    font-size:13px;
-    font-weight:800;
-  }
-  .sticky-bar .price{
-    font-size:11.5px;
-    color:#C7C1F5;
-  }
-  .sticky-bar .continue-btn{
-    background:#fff;
-    color:var(--ink);
-    border:none;
-    border-radius:10px;
-    padding:10px 16px;
-    font-weight:700;
-    font-size:12.5px;
-    cursor:pointer;
-    white-space:nowrap;
-  }
-  .sticky-bar .continue-btn:hover{background:var(--purple-light); color:var(--purple);}
-
   /* ---------- TOAST ---------- */
   .toast{
     position:fixed;
@@ -1250,14 +1208,6 @@
 
   <footer class="foot">© 2026 Fission. All rights reserved.</footer>
 
-  <div class="sticky-bar" id="stickyBar">
-    <div class="info">
-      <div class="plan" id="stickyPlan">Fission Starter</div>
-      <div class="price" id="stickyPrice">₦1,000/day</div>
-    </div>
-    <button class="continue-btn" id="continueBtn">Continue →</button>
-  </div>
-
   <div class="toast" id="toast"></div>
 </div>
 
@@ -1565,12 +1515,13 @@
   });
 
   // If we were bounced here from dashboard.html (not signed in yet),
-  // remember to send the person back there once they finish signing in.
+  // this lets us auto-open the sign-up modal below.
   var urlParams = new URLSearchParams(window.location.search);
-  var redirectTarget = urlParams.get('redirect');
 
-  // Keep the app in sync with Supabase's own auth state, and resume
-  // whatever plan the person was trying to choose before signing in.
+  // Keep the app in sync with Supabase's own auth state. Any successful
+  // sign up or log in completed through the modal sends the person to
+  // their dashboard — resuming a pending plan selection first if there
+  // was one.
   supabaseClient.auth.onAuthStateChange(function(event, session){
     currentSession = session;
     updateAccountUI();
@@ -1579,14 +1530,13 @@
       var resumeBtn = pendingPlanBtn;
       pendingPlanBtn = null;
       closeAuthModal();
-      showToast('Signed in — welcome to Fission!');
-      if (redirectTarget === 'dashboard') {
-        window.location.href = 'dashboard.html';
+
+      if (resumeBtn && typeof goToDashboardWithPlan === 'function') {
+        goToDashboardWithPlan(resumeBtn);
         return;
       }
-      if (resumeBtn && typeof handlePlanChoose === 'function') {
-        handlePlanChoose(resumeBtn);
-      }
+      showToast('Signed in — taking you to your dashboard…');
+      window.location.href = 'dashboard.html';
     }
   });
 
@@ -1685,69 +1635,36 @@
   });
 
   // ---------- Choose plan / Request quote ----------
-  var stickyBar = document.getElementById('stickyBar');
-  var stickyPlan = document.getElementById('stickyPlan');
-  var stickyPrice = document.getElementById('stickyPrice');
-  var continueBtn = document.getElementById('continueBtn');
-  var selectedPlanName = null;
-  var selectedPlanPrice = null;
-
-  function handlePlanChoose(btn){
-    var card = btn.closest('.plan-card');
-    var planName = card.dataset.plan;
-
-    if (btn.dataset.quote) {
-      showToast('Thanks! We\'ll reach out with custom pricing for ' + planName + '.');
-      selectedPlanName = planName;
-      selectedPlanPrice = 'Custom pricing';
-      stickyPlan.textContent = planName;
-      stickyPrice.textContent = selectedPlanPrice;
-      stickyBar.classList.add('show');
-      savePlanSelection(planName, selectedPlanPrice, null);
-      return;
-    }
-
-    // clear other selections
-    document.querySelectorAll('.plan-card').forEach(function(c){ c.classList.remove('selected'); });
-    document.querySelectorAll('.plan-choose').forEach(function(b){
-      if (!b.dataset.quote){
-        b.classList.remove('is-selected');
-        b.textContent = 'Choose ' + b.closest('.plan-card').dataset.plan.replace('Fission ', '');
-      }
-    });
-
-    card.classList.add('selected');
-    btn.classList.add('is-selected');
-    btn.textContent = 'Selected ✓';
-
-    var priceText;
+  // Selecting a plan (or requesting a custom quote) now saves the
+  // selection to Supabase and hands the person off to their dashboard,
+  // where they finish onboarding with a short details form.
+  function planPricingFor(planName){
     if (planPrices[planName]) {
-      priceText = planPrices[planName][currentFreq].amount + ' ' + planPrices[planName][currentFreq].per;
-    } else {
-      priceText = 'Starting from ₦1,500,000+';
+      var p = planPrices[planName][currentFreq];
+      return { priceText: p.amount + ' ' + p.per, billingFrequency: currentFreq };
     }
-
-    selectedPlanName = planName;
-    selectedPlanPrice = priceText;
-    stickyPlan.textContent = planName;
-    stickyPrice.textContent = priceText;
-    stickyBar.classList.add('show');
-    showToast(planName + ' selected — scroll down to continue.');
-    savePlanSelection(planName, priceText, currentFreq);
+    return { priceText: 'Starting from ₦1,500,000+', billingFrequency: null };
   }
 
-  // Best-effort save of the selection to Supabase. Requires a
-  // `plan_selections` table (see SQL in the project notes) — if it
-  // doesn't exist yet, this silently no-ops rather than breaking the UI.
-  function savePlanSelection(planName, priceLabel, billingFrequency){
-    if (!currentSession) return;
+  function goToDashboardWithPlan(btn){
+    var card = btn.closest('.plan-card');
+    var planName = card.dataset.plan;
+    var pricing = planPricingFor(planName);
+
+    btn.disabled = true;
+    showToast(planName + ' selected — taking you to your dashboard…');
+
     supabaseClient.from('plan_selections').insert({
       user_id: currentSession.user.id,
       plan_name: planName,
-      price_label: priceLabel,
-      billing_frequency: billingFrequency
+      price_label: pricing.priceText,
+      billing_frequency: pricing.billingFrequency,
+      details_submitted: false
     }).then(function(res){
       if (res.error) console.warn('Could not save plan selection:', res.error.message);
+      window.location.href = 'dashboard.html';
+    }).catch(function(){
+      window.location.href = 'dashboard.html';
     });
   }
 
@@ -1760,15 +1677,8 @@
         openAuthModal('signup');
         return;
       }
-      handlePlanChoose(btn);
+      goToDashboardWithPlan(btn);
     });
-  });
-
-  continueBtn.addEventListener('click', function(){
-    if (!selectedPlanName) return;
-    var msg = encodeURIComponent('Hi Fission! I\'d like to sign up for the ' + selectedPlanName + ' plan (' + selectedPlanPrice + ').');
-    // Placeholder WhatsApp number — replace with your real business number.
-    window.open('https://wa.me/2340000000000?text=' + msg, '_blank');
   });
 })();
 

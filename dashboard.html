@@ -487,6 +487,51 @@
 
         <!-- ================= OVERVIEW PANEL ================= -->
         <section class="panel active" id="panel-overview">
+
+          <!-- Plan selection / onboarding status -->
+          <div class="card" id="planStatusCard">
+            <div class="card-head">
+              <div>
+                <h3 id="planCardTitle">Choose your plan</h3>
+                <p class="sub" id="planCardSub">You haven't selected a Fission plan yet.</p>
+              </div>
+            </div>
+
+            <!-- State A: no plan selected yet -->
+            <div id="planStateNone">
+              <a href="index.html#pricing" class="btn btn-primary btn-sm">Select a Plan</a>
+            </div>
+
+            <!-- State B: plan selected, onboarding details still needed -->
+            <form class="field-grid" id="onboardingForm" style="display:none;">
+              <div class="field">
+                <label>What's your website about?</label>
+                <textarea id="obDescription" placeholder="Tell us about your business, what you sell or offer, and what you'd like your website to do…" required></textarea>
+              </div>
+              <div class="field-grid two">
+                <div class="field">
+                  <label>Email address</label>
+                  <input type="email" id="obEmail" placeholder="you@business.com" required>
+                </div>
+                <div class="field">
+                  <label>WhatsApp number</label>
+                  <input type="text" id="obWhatsapp" placeholder="+234 800 000 0000" required>
+                </div>
+              </div>
+              <p class="sub" style="margin:0;">Our team will reach out via email or WhatsApp to get your site started — so please make sure both are correct.</p>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-sm" id="obSubmitBtn">Submit details</button>
+              </div>
+            </form>
+
+            <!-- State C: details submitted -->
+            <div id="planStateDone" style="display:none;">
+              <span class="badge badge-green" id="doneBadge">Details received</span>
+              <p class="sub" style="margin:10px 0 4px;">Thanks! Our team will reach out via <strong>email</strong> or <strong>WhatsApp</strong> shortly to get your site started.</p>
+              <p class="sub" style="margin:0;" id="doneContactLine"></p>
+            </div>
+          </div>
+
           <div class="stat-grid">
             <div class="stat">
               <div class="label">Visitors</div>
@@ -818,6 +863,83 @@
       var open = activityList.classList.toggle('open');
       viewAllBtn.textContent = open ? 'Hide' : 'View all';
     });
+
+    // ----- Plan selection / onboarding status -----
+    var planCardTitle = document.getElementById('planCardTitle');
+    var planCardSub = document.getElementById('planCardSub');
+    var planStateNone = document.getElementById('planStateNone');
+    var onboardingForm = document.getElementById('onboardingForm');
+    var planStateDone = document.getElementById('planStateDone');
+    var obSubmitBtn = document.getElementById('obSubmitBtn');
+
+    function renderPlanStatus(row){
+      planStateNone.style.display = 'none';
+      onboardingForm.style.display = 'none';
+      planStateDone.style.display = 'none';
+
+      if (!row) {
+        planCardTitle.textContent = 'Choose your plan';
+        planCardSub.textContent = "You haven't selected a Fission plan yet.";
+        planStateNone.style.display = 'block';
+        return;
+      }
+
+      if (!row.details_submitted) {
+        planCardTitle.textContent = row.plan_name + ' selected';
+        planCardSub.textContent = (row.price_label ? row.price_label + ' · ' : '') + "Just a few details and our team takes it from here.";
+        onboardingForm.dataset.rowId = row.id;
+        document.getElementById('obDescription').value = row.website_description || '';
+        document.getElementById('obEmail').value = row.contact_email || currentSession.user.email || '';
+        document.getElementById('obWhatsapp').value = row.whatsapp_number || '';
+        onboardingForm.style.display = 'grid';
+        return;
+      }
+
+      planCardTitle.textContent = row.plan_name;
+      planCardSub.textContent = (row.price_label || 'Plan selected') + ' · Onboarding complete';
+      document.getElementById('doneContactLine').textContent =
+        "We'll contact you at " + row.contact_email + ' or ' + row.whatsapp_number + '.';
+      planStateDone.style.display = 'block';
+    }
+
+    function loadPlanStatus(){
+      supabaseClient.from('plan_selections').select('*')
+        .eq('user_id', currentSession.user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .then(function(res){
+          if (res.error) { console.warn('Could not load plan status:', res.error.message); return; }
+          renderPlanStatus(res.data && res.data.length ? res.data[0] : null);
+        });
+    }
+
+    onboardingForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var rowId = onboardingForm.dataset.rowId;
+      if (!rowId) return;
+      var description = document.getElementById('obDescription').value.trim();
+      var email = document.getElementById('obEmail').value.trim();
+      var whatsapp = document.getElementById('obWhatsapp').value.trim();
+      if (!description || !email || !whatsapp) return;
+
+      obSubmitBtn.disabled = true;
+      obSubmitBtn.textContent = 'Submitting…';
+
+      supabaseClient.from('plan_selections').update({
+        website_description: description,
+        contact_email: email,
+        whatsapp_number: whatsapp,
+        details_submitted: true
+      }).eq('id', rowId).select().single().then(function(res){
+        obSubmitBtn.disabled = false;
+        obSubmitBtn.textContent = 'Submit details';
+        if (res.error) { showToast('Could not submit your details — please try again.'); return; }
+        showToast("Thanks! We'll reach out via email or WhatsApp shortly.");
+        renderPlanStatus(res.data);
+      });
+    });
+
+    loadPlanStatus();
 
     // ----- My Website form -----
     var websiteFields = ['siteName','siteEmail','siteTagline','siteAbout','siteWhatsapp'];
