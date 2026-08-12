@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Fission</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#6C4CF1;
+    --purple-dark:#5A38E8;
+    --purple-light:#EFEAFE;
+    --purple-line:#E4DEFB;
+    --ink:#14141F;
+    --ink-soft:#5B5B6B;
+    --ink-faint:#8B8B9A;
+    --bg:#FAFAFC;
+    --card:#FFFFFF;
+    --line:#E9E8F2;
+    --green:#22C55E;
+    --green-light:#E7F9EE;
+    --red:#DC2626;
+    --red-light:#FEF2F2;
+    --amber:#F59E0B;
+    --amber-light:#FEF6E7;
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:10px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit;}
+  input, select, textarea{font-family:inherit;}
+  :focus-visible{outline:2.5px solid var(--purple); outline-offset:2px;}
+
+  /* ---------- Gate / loading screen ---------- */
+  #gateScreen{
+    position:fixed; inset:0;
+    background:var(--bg);
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:14px;
+    z-index:999;
+    text-align:center;
+    padding:24px;
+  }
+  .gate-spinner{
+    width:34px; height:34px;
+    border-radius:50%;
+    border:3px solid var(--purple-line);
+    border-top-color:var(--purple);
+    animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  #gateScreen p{ font-size:13.5px; color:var(--ink-soft); margin:0; }
+  #gateScreen.hidden{ display:none; }
+
+  /* ---------- Shell layout ---------- */
+  #shell{ display:none; min-height:100vh; }
+  #shell.ready{ display:block; }
+
+  @media (min-width:960px){
+    #shell.ready{ display:flex; }
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    position:fixed;
+    top:0; left:0; bottom:0;
+    width:230px;
+    background:#fff;
+    border-right:1px solid var(--line);
+    padding:20px 14px;
+    display:flex;
+    flex-direction:column;
+    transform:translateX(-100%);
+    transition:transform 0.25s ease;
+    z-index:60;
+  }
+  .sidebar.open{ transform:translateX(0); }
+  @media (min-width:960px){
+    .sidebar{ position:sticky; transform:none; flex-shrink:0; }
+  }
+
+  .sb-backdrop{
+    position:fixed; inset:0;
+    background:rgba(20,20,31,0.45);
+    z-index:55;
+    display:none;
+  }
+  .sb-backdrop.open{ display:block; }
+  @media (min-width:960px){ .sb-backdrop{ display:none !important; } }
+
+  .sb-logo{
+    display:flex; align-items:center; gap:8px;
+    font-weight:800; font-size:15px;
+    padding:4px 8px 20px;
+  }
+  .sb-nav{ display:flex; flex-direction:column; gap:4px; flex:1; }
+  .sb-item{
+    display:flex; align-items:center; gap:10px;
+    padding:11px 12px;
+    border-radius:10px;
+    font-size:13.5px; font-weight:600;
+    color:var(--ink-soft);
+    border:none; background:none;
+    width:100%; text-align:left;
+    cursor:pointer;
+  }
+  .sb-item svg{ width:17px; height:17px; flex-shrink:0; }
+  .sb-item:hover{ background:var(--purple-light); color:var(--purple); }
+  .sb-item.active{
+    background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    color:#fff;
+  }
+  .sb-foot{
+    border-top:1px solid var(--line);
+    padding-top:14px;
+    margin-top:14px;
+  }
+  .sb-back{
+    display:flex; align-items:center; gap:8px;
+    font-size:12.5px; font-weight:700;
+    color:var(--ink-faint);
+    padding:9px 12px;
+  }
+  .sb-back:hover{ color:var(--purple); }
+
+  /* ---------- Main column ---------- */
+  .main-col{ flex:1; min-width:0; }
+
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:rgba(250,250,252,0.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .tb-left{ display:flex; align-items:center; gap:12px; min-width:0; }
+  .hamburger{
+    display:flex;
+    width:34px; height:34px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:#fff;
+    align-items:center; justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  @media (min-width:960px){ .hamburger{ display:none; } }
+  .tb-title h1{
+    font-size:15px; font-weight:800; margin:0;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .tb-title p{
+    font-size:11.5px; color:var(--ink-faint); margin:2px 0 0;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .tb-right{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
+
+  .bell-wrap, .acc-wrap{ position:relative; }
+  .bell{
+    position:relative;
+    width:34px; height:34px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:#fff;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--ink-soft);
+    cursor:pointer; padding:0;
+  }
+  .bell:hover{ border-color:var(--purple); color:var(--purple); }
+  .bell .dot{
+    position:absolute; top:-3px; right:-3px;
+    background:var(--purple); color:#fff;
+    font-size:8px; font-weight:700;
+    width:15px; height:15px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .drop{
+    position:absolute; top:44px; right:0;
+    width:230px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:0 16px 34px -14px rgba(20,20,31,0.28);
+    padding:8px;
+    display:none;
+    z-index:50;
+  }
+  .drop.open{ display:block; }
+  .drop-item{
+    font-size:12px; color:var(--ink-soft);
+    padding:9px 10px; border-radius:8px; line-height:1.4;
+  }
+  .drop-item:hover{ background:var(--purple-light); }
+  .drop-empty{ font-size:12px; color:var(--ink-faint); padding:14px 10px; text-align:center; }
+
+  .acc-btn{
+    display:flex; align-items:center; gap:8px;
+    background:#fff; border:1px solid var(--line);
+    border-radius:999px; padding:5px 12px 5px 5px;
+    cursor:pointer;
+  }
+  .acc-avatar{
+    width:26px; height:26px; border-radius:50%;
+    background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:800; flex-shrink:0;
+  }
+  .acc-btn span{ font-size:12.5px; font-weight:700; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .acc-email{
+    font-size:11.5px; color:var(--ink-faint);
+    padding:6px 10px 10px; border-bottom:1px solid var(--line);
+    margin-bottom:6px; word-break:break-all;
+  }
+  .acc-logout{
+    width:100%; text-align:left; background:none; border:none;
+    padding:9px 10px; border-radius:8px;
+    font-weight:700; font-size:13px; color:var(--red); cursor:pointer;
+  }
+  .acc-logout:hover{ background:var(--red-light); }
+
+  .content{ padding:20px 18px 60px; max-width:1080px; }
+
+  /* ---------- Panels ---------- */
+  .panel{ display:none; animation:fade-in 0.2s ease; }
+  .panel.active{ display:block; }
+  @keyframes fade-in{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
+  .stat-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-bottom:22px;
+  }
+  @media (min-width:640px){ .stat-grid{ grid-template-columns:repeat(4,1fr); } }
+  .stat{
+    background:#fff; border:1px solid var(--line);
+    border-radius:var(--radius-md); padding:14px;
+  }
+  .stat .label{ font-size:11px; color:var(--ink-faint); font-weight:600; margin-bottom:6px; }
+  .stat .value{ font-size:21px; font-weight:800; }
+  .stat .delta{ font-size:11px; font-weight:700; color:var(--green); margin:3px 0 8px; }
+
+  .card{
+    background:#fff; border:1px solid var(--line);
+    border-radius:var(--radius-md); padding:18px;
+    margin-bottom:16px;
+  }
+  .card-head{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px; margin-bottom:14px;
+  }
+  .card-head h3{ font-size:14.5px; font-weight:800; margin:0; }
+  .card-head .sub{ font-size:11.5px; color:var(--ink-faint); margin:3px 0 0; }
+  .link-btn{
+    background:none; border:none; color:var(--purple);
+    font-weight:700; font-size:12.5px; cursor:pointer; padding:0;
+  }
+  .link-btn:hover{ text-decoration:underline; }
+
+  .activity-list{ display:none; flex-direction:column; gap:10px; }
+  .activity-list.open{ display:flex; }
+  .act-row{
+    display:flex; justify-content:space-between; gap:10px;
+    font-size:12.5px; color:var(--ink-soft);
+    padding-bottom:10px; border-bottom:1px solid var(--line);
+  }
+  .act-row:last-child{ border-bottom:none; padding-bottom:0; }
+  .act-time{ color:var(--ink-faint); flex-shrink:0; }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    border-radius:999px; padding:10px 16px;
+    font-weight:700; font-size:13px; cursor:pointer; border:1.5px solid transparent;
+  }
+  .btn-primary{ background:var(--purple); color:#fff; }
+  .btn-primary:hover{ filter:brightness(1.05); }
+  .btn-ghost{ background:#fff; border-color:var(--line); color:var(--ink); }
+  .btn-ghost:hover{ border-color:var(--purple); color:var(--purple); }
+  .btn-sm{ padding:7px 12px; font-size:12px; }
+  .btn[disabled]{ opacity:0.55; cursor:not-allowed; }
+
+  /* form */
+  .field-grid{ display:grid; gap:14px; }
+  @media (min-width:640px){ .field-grid.two{ grid-template-columns:1fr 1fr; } }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field label{ font-size:12px; font-weight:700; color:var(--ink); }
+  .field input, .field textarea{
+    font-size:13.5px; padding:11px 12px;
+    border-radius:10px; border:1.5px solid var(--line);
+    background:var(--bg); color:var(--ink);
+  }
+  .field input:focus, .field textarea:focus{ outline:none; border-color:var(--purple); background:#fff; }
+  .field textarea{ resize:vertical; min-height:80px; font-family:inherit; }
+  .form-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+
+  /* list rows: pages/products/orders */
+  .row-list{ display:flex; flex-direction:column; gap:10px; }
+  .item-row{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px; padding:12px; border:1px solid var(--line); border-radius:12px;
+    flex-wrap:wrap;
+  }
+  .item-info{ min-width:0; flex:1; }
+  .item-title{ font-size:13px; font-weight:700; }
+  .item-sub{ font-size:11.5px; color:var(--ink-faint); margin-top:2px; }
+  .item-actions{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
+
+  .badge{
+    font-size:10.5px; font-weight:700; padding:4px 9px; border-radius:999px;
+    display:inline-block;
+  }
+  .badge-green{ background:var(--green-light); color:#15803D; }
+  .badge-amber{ background:var(--amber-light); color:#B45309; }
+  .badge-red{ background:var(--red-light); color:#B91C1C; }
+  .badge-gray{ background:var(--purple-light); color:var(--purple); }
+
+  .toggle{
+    position:relative; width:36px; height:20px; flex-shrink:0;
+    border-radius:999px; background:var(--line); cursor:pointer; border:none;
+  }
+  .toggle::after{
+    content:''; position:absolute; top:2px; left:2px;
+    width:16px; height:16px; border-radius:50%; background:#fff;
+    box-shadow:0 1px 3px rgba(0,0,0,0.25);
+    transition:transform 0.15s ease;
+  }
+  .toggle.on{ background:var(--green); }
+  .toggle.on::after{ transform:translateX(16px); }
+
+  .icon-btn{
+    width:30px; height:30px; border-radius:8px;
+    border:1px solid var(--line); background:#fff;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--ink-soft); cursor:pointer; flex-shrink:0;
+  }
+  .icon-btn:hover{ border-color:var(--purple); color:var(--purple); }
+  .icon-btn.danger:hover{ border-color:var(--red); color:var(--red); }
+  .icon-btn svg{ width:14px; height:14px; }
+
+  .toolbar{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+  .search-input{
+    flex:1; min-width:160px;
+    font-size:13px; padding:10px 12px;
+    border-radius:10px; border:1.5px solid var(--line);
+    background:var(--bg);
+  }
+  .search-input:focus{ outline:none; border-color:var(--purple); background:#fff; }
+  .filter-select{
+    font-size:13px; padding:10px 12px;
+    border-radius:10px; border:1.5px solid var(--line);
+    background:var(--bg); color:var(--ink);
+  }
+
+  .empty-state{
+    text-align:center; padding:30px 10px; color:var(--ink-faint); font-size:12.5px;
+  }
+
+  /* inline add form */
+  .inline-form{
+    display:none; flex-direction:column; gap:10px;
+    border:1.5px dashed var(--purple-line); border-radius:12px;
+    padding:14px; margin-bottom:14px; background:var(--purple-light);
+  }
+  .inline-form.open{ display:flex; }
+
+  .toast{
+    position:fixed; left:50%; bottom:24px; transform:translate(-50%,16px);
+    background:var(--ink); color:#fff;
+    font-size:12.5px; font-weight:600;
+    padding:11px 18px; border-radius:999px;
+    opacity:0; pointer-events:none;
+    transition:all 0.25s ease;
+    z-index:200;
+    white-space:nowrap;
+  }
+  .toast.show{ opacity:1; transform:translate(-50%,0); }
+</style>
+</head>
+<body>
+
+  <!-- ---------- Gate screen (shown while checking auth) ---------- -->
+  <div id="gateScreen">
+    <div class="gate-spinner"></div>
+    <p id="gateMsg">Checking your session…</p>
+  </div>
+
+  <!-- ---------- Dashboard shell ---------- -->
+  <div id="shell">
+    <div class="sb-backdrop" id="sbBackdrop"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-logo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 2L5 13H11L9 22L19 10H12L14 2Z" fill="url(#g3)"/><defs><linearGradient id="g3" x1="5" y1="2" x2="19" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#7C5CFC"/><stop offset="1" stop-color="#5A38E8"/></linearGradient></defs></svg>
+        FISSION
+      </div>
+      <nav class="sb-nav" id="sbNav">
+        <button class="sb-item active" data-panel="overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+          Dashboard
+        </button>
+        <button class="sb-item" data-panel="website">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+          My Website
+        </button>
+        <button class="sb-item" data-panel="pages">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+          Pages
+        </button>
+        <button class="sb-item" data-panel="products">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L13.42 20.6a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><circle cx="7" cy="7" r="1.5"/></svg>
+          Products
+        </button>
+        <button class="sb-item" data-panel="orders">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg>
+          Orders
+        </button>
+      </nav>
+      <div class="sb-foot">
+        <a href="index.html" class="sb-back">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back to site
+        </a>
+      </div>
+    </aside>
+
+    <div class="main-col">
+      <header class="topbar">
+        <div class="tb-left">
+          <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+          <div class="tb-title">
+            <h1 id="panelTitle">Welcome back 👋</h1>
+            <p id="panelSub">Here's what's happening with your website today.</p>
+          </div>
+        </div>
+        <div class="tb-right">
+          <div class="bell-wrap">
+            <button class="bell" id="bellBtn" aria-label="Notifications">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+              <span class="dot" id="bellCount">3</span>
+            </button>
+            <div class="drop" id="bellDropdown">
+              <div class="drop-item">New booking from Chidinma A.</div>
+              <div class="drop-item">3 new website visitors today</div>
+              <div class="drop-item">Monthly backup completed</div>
+            </div>
+          </div>
+          <div class="acc-wrap">
+            <button class="acc-btn" id="accBtn">
+              <span class="acc-avatar" id="accAvatar">?</span>
+              <span id="accLabel">Account</span>
+            </button>
+            <div class="drop" id="accDropdown" style="width:200px;">
+              <div class="acc-email" id="accEmail"></div>
+              <button class="acc-logout" id="logoutBtn">Log out</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+
+        <!-- ================= OVERVIEW PANEL ================= -->
+        <section class="panel active" id="panel-overview">
+          <div class="stat-grid">
+            <div class="stat">
+              <div class="label">Visitors</div>
+              <div class="value">2,431</div>
+              <div class="delta">↑ 12.5%</div>
+              <svg width="100%" height="22" viewBox="0 0 80 20" preserveAspectRatio="none"><polyline points="0,16 15,14 30,10 45,12 60,6 80,2" fill="none" stroke="#22C55E" stroke-width="2"/></svg>
+            </div>
+            <div class="stat">
+              <div class="label">Page Views</div>
+              <div class="value">6,281</div>
+              <div class="delta">↑ 18.4%</div>
+              <svg width="100%" height="22" viewBox="0 0 80 20" preserveAspectRatio="none"><polyline points="0,10 15,16 30,8 45,14 60,4 80,8" fill="none" stroke="#6C4CF1" stroke-width="2"/></svg>
+            </div>
+            <div class="stat">
+              <div class="label">Leads</div>
+              <div class="value">84</div>
+              <div class="delta">↑ 8.7%</div>
+              <svg width="100%" height="22" viewBox="0 0 80 20" preserveAspectRatio="none"><polyline points="0,14 15,12 30,15 45,9 60,11 80,3" fill="none" stroke="#F59E0B" stroke-width="2"/></svg>
+            </div>
+            <div class="stat">
+              <div class="label">Bookings</div>
+              <div class="value">32</div>
+              <div class="delta">↑ 15.2%</div>
+              <svg width="100%" height="22" viewBox="0 0 80 20" preserveAspectRatio="none"><polyline points="0,15 15,13 30,14 45,7 60,9 80,4" fill="none" stroke="#3B82F6" stroke-width="2"/></svg>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Recent Activity</h3>
+                <p class="sub">Latest events across your website</p>
+              </div>
+              <button class="link-btn" id="viewAllBtn">View all</button>
+            </div>
+            <div class="activity-list" id="activityList">
+              <div class="act-row"><span>New order from Bloom &amp; Co.</span><span class="act-time">2h ago</span></div>
+              <div class="act-row"><span>Booking confirmed — Emma K.</span><span class="act-time">5h ago</span></div>
+              <div class="act-row"><span>Website backup completed</span><span class="act-time">1d ago</span></div>
+              <div class="act-row"><span>New product added: Ankara Tote Bag</span><span class="act-time">2d ago</span></div>
+              <div class="act-row"><span>SSL certificate renewed</span><span class="act-time">4d ago</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= MY WEBSITE PANEL ================= -->
+        <section class="panel" id="panel-website">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Site details</h3>
+                <p class="sub">Changes here update what visitors see on your live site.</p>
+              </div>
+            </div>
+            <form class="field-grid two" id="websiteForm">
+              <div class="field">
+                <label>Business name</label>
+                <input type="text" id="siteName" value="Bloom &amp; Co.">
+              </div>
+              <div class="field">
+                <label>Contact email</label>
+                <input type="email" id="siteEmail" value="hello@bloomandco.com">
+              </div>
+              <div class="field" style="grid-column:1/-1;">
+                <label>Tagline</label>
+                <input type="text" id="siteTagline" value="Fresh flowers, delivered same-day across Lagos.">
+              </div>
+              <div class="field" style="grid-column:1/-1;">
+                <label>About</label>
+                <textarea id="siteAbout">Bloom &amp; Co. is a boutique flower studio crafting arrangements for every occasion — from birthdays to weddings.</textarea>
+              </div>
+              <div class="field">
+                <label>WhatsApp number</label>
+                <input type="text" id="siteWhatsapp" value="+234 800 000 0000">
+              </div>
+              <div class="field">
+                <label>Subdomain</label>
+                <input type="text" id="siteSubdomain" value="bloomandco.fission.site" disabled style="opacity:0.65;">
+              </div>
+            </form>
+            <div class="form-actions">
+              <button type="button" class="btn btn-ghost btn-sm" id="resetWebsiteBtn">Reset</button>
+              <button type="button" class="btn btn-primary btn-sm" id="saveWebsiteBtn">Save changes</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PAGES PANEL ================= -->
+        <section class="panel" id="panel-pages">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Pages</h3>
+                <p class="sub">Toggle a page live or offline, or add a new one.</p>
+              </div>
+              <button class="link-btn" id="addPageToggle">+ Add page</button>
+            </div>
+
+            <form class="inline-form" id="addPageForm">
+              <div class="field">
+                <label>Page name</label>
+                <input type="text" id="newPageName" placeholder="e.g. FAQ" required>
+              </div>
+              <div class="form-actions" style="margin-top:0;">
+                <button type="button" class="btn btn-ghost btn-sm" id="cancelPageBtn">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm">Add page</button>
+              </div>
+            </form>
+
+            <div class="row-list" id="pagesList"></div>
+          </div>
+        </section>
+
+        <!-- ================= PRODUCTS PANEL ================= -->
+        <section class="panel" id="panel-products">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Products</h3>
+                <p class="sub">Manage what's for sale on your storefront.</p>
+              </div>
+              <button class="link-btn" id="addProductToggle">+ Add product</button>
+            </div>
+
+            <form class="inline-form" id="addProductForm">
+              <div class="field-grid two">
+                <div class="field">
+                  <label>Product name</label>
+                  <input type="text" id="newProductName" placeholder="e.g. Rose Bouquet" required>
+                </div>
+                <div class="field">
+                  <label>Price (₦)</label>
+                  <input type="number" id="newProductPrice" placeholder="15000" min="0" required>
+                </div>
+                <div class="field">
+                  <label>Stock quantity</label>
+                  <input type="number" id="newProductStock" placeholder="10" min="0" required>
+                </div>
+              </div>
+              <div class="form-actions" style="margin-top:0;">
+                <button type="button" class="btn btn-ghost btn-sm" id="cancelProductBtn">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm">Add product</button>
+              </div>
+            </form>
+
+            <div class="toolbar">
+              <input type="text" class="search-input" id="productSearch" placeholder="Search products…">
+            </div>
+
+            <div class="row-list" id="productsList"></div>
+          </div>
+        </section>
+
+        <!-- ================= ORDERS PANEL ================= -->
+        <section class="panel" id="panel-orders">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Orders</h3>
+                <p class="sub">Track and fulfil incoming customer orders.</p>
+              </div>
+            </div>
+
+            <div class="toolbar">
+              <select class="filter-select" id="orderFilter">
+                <option value="all">All statuses</option>
+                <option value="pending">Pending</option>
+                <option value="fulfilled">Fulfilled</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+
+            <div class="row-list" id="ordersList"></div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  // ---------- Supabase ----------
+  var SUPABASE_URL = 'https://peuhprnoszejkwtczzmv.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_BTPwUe4Cfe5UaTat8VP1Jw_YH5o4IMr';
+  var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  var gateScreen = document.getElementById('gateScreen');
+  var gateMsg = document.getElementById('gateMsg');
+  var shell = document.getElementById('shell');
+  var currentSession = null;
+
+  // ---------- Toast ----------
+  var toastEl = document.getElementById('toast');
+  var toastTimer;
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2600);
+  }
+
+  function initialsFor(session){
+    var name = (session.user.user_metadata && session.user.user_metadata.full_name) || '';
+    var source = name || session.user.email || '?';
+    return source.trim().charAt(0).toUpperCase();
+  }
+
+  function firstNameFor(session){
+    var name = (session.user.user_metadata && session.user.user_metadata.full_name) || '';
+    if (name) return name.split(' ')[0];
+    return session.user.email ? session.user.email.split('@')[0] : 'there';
+  }
+
+  function applySession(session){
+    document.getElementById('accAvatar').textContent = initialsFor(session);
+    document.getElementById('accLabel').textContent = firstNameFor(session);
+    document.getElementById('accEmail').textContent = session.user.email;
+    document.getElementById('panelTitle').textContent = 'Welcome back, ' + firstNameFor(session) + ' 👋';
+  }
+
+  // ---------- Auth guard ----------
+  // This page requires a signed-in Supabase session. If none is found,
+  // send the person back to the marketing site to sign up or log in,
+  // and remember to bounce them straight back here afterwards.
+  function redirectToAuth(){
+    gateMsg.textContent = 'Please sign in to view your dashboard — redirecting…';
+    setTimeout(function(){
+      window.location.href = 'index.html?auth=1&redirect=dashboard';
+    }, 700);
+  }
+
+  supabaseClient.auth.getSession().then(function(res){
+    var session = res.data.session;
+    if (!session) {
+      redirectToAuth();
+      return;
+    }
+    currentSession = session;
+    applySession(session);
+    gateScreen.classList.add('hidden');
+    shell.classList.add('ready');
+    initInteractivity();
+  }).catch(function(){
+    redirectToAuth();
+  });
+
+  supabaseClient.auth.onAuthStateChange(function(event, session){
+    if (event === 'SIGNED_OUT') {
+      window.location.href = 'index.html';
+    }
+  });
+
+  // ---------- Everything below only runs once we know the user is signed in ----------
+  function initInteractivity(){
+
+    // ----- Sidebar nav / panel switching -----
+    var panelMeta = {
+      overview: { title: 'Welcome back, ' + firstNameFor(currentSession) + ' 👋', sub: "Here's what's happening with your website today." },
+      website:  { title: 'My Website', sub: 'Edit the content visitors see on your live site.' },
+      pages:    { title: 'Pages', sub: 'Control which pages are published.' },
+      products: { title: 'Products', sub: 'Manage your storefront catalogue.' },
+      orders:   { title: 'Orders', sub: 'Track and fulfil customer orders.' }
+    };
+
+    var sbItems = document.querySelectorAll('.sb-item');
+    var panelTitle = document.getElementById('panelTitle');
+    var panelSub = document.getElementById('panelSub');
+
+    function goToPanel(key){
+      sbItems.forEach(function(i){ i.classList.toggle('active', i.dataset.panel === key); });
+      document.querySelectorAll('.panel').forEach(function(p){
+        p.classList.toggle('active', p.id === 'panel-' + key);
+      });
+      var meta = panelMeta[key];
+      panelTitle.textContent = meta.title;
+      panelSub.textContent = meta.sub;
+      closeSidebar();
+    }
+
+    sbItems.forEach(function(item){
+      item.addEventListener('click', function(){ goToPanel(item.dataset.panel); });
+    });
+
+    // ----- Mobile sidebar drawer -----
+    var sidebar = document.getElementById('sidebar');
+    var sbBackdrop = document.getElementById('sbBackdrop');
+    var hamburgerBtn = document.getElementById('hamburgerBtn');
+    function openSidebar(){ sidebar.classList.add('open'); sbBackdrop.classList.add('open'); }
+    function closeSidebar(){ sidebar.classList.remove('open'); sbBackdrop.classList.remove('open'); }
+    hamburgerBtn.addEventListener('click', openSidebar);
+    sbBackdrop.addEventListener('click', closeSidebar);
+
+    // ----- Notification bell -----
+    var bellBtn = document.getElementById('bellBtn');
+    var bellDropdown = document.getElementById('bellDropdown');
+    var bellCount = document.getElementById('bellCount');
+    bellBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      accDropdown.classList.remove('open');
+      bellDropdown.classList.toggle('open');
+      bellCount.style.display = 'none';
+    });
+
+    // ----- Account dropdown -----
+    var accBtn = document.getElementById('accBtn');
+    var accDropdown = document.getElementById('accDropdown');
+    accBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      bellDropdown.classList.remove('open');
+      accDropdown.classList.toggle('open');
+    });
+    document.addEventListener('click', function(){
+      bellDropdown.classList.remove('open');
+      accDropdown.classList.remove('open');
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function(){
+      supabaseClient.auth.signOut();
+    });
+
+    // ----- Recent activity view all -----
+    var viewAllBtn = document.getElementById('viewAllBtn');
+    var activityList = document.getElementById('activityList');
+    viewAllBtn.addEventListener('click', function(){
+      var open = activityList.classList.toggle('open');
+      viewAllBtn.textContent = open ? 'Hide' : 'View all';
+    });
+
+    // ----- My Website form -----
+    var websiteFields = ['siteName','siteEmail','siteTagline','siteAbout','siteWhatsapp'];
+    var websiteColumnMap = {
+      siteName: 'site_name',
+      siteEmail: 'site_email',
+      siteTagline: 'tagline',
+      siteAbout: 'about',
+      siteWhatsapp: 'whatsapp'
+    };
+    var websiteDefaults = {};
+
+    function applyWebsiteRow(row){
+      document.getElementById('siteName').value = row.site_name || '';
+      document.getElementById('siteEmail').value = row.site_email || '';
+      document.getElementById('siteTagline').value = row.tagline || '';
+      document.getElementById('siteAbout').value = row.about || '';
+      document.getElementById('siteWhatsapp').value = row.whatsapp || '';
+      document.getElementById('siteSubdomain').value = row.subdomain || '';
+      websiteFields.forEach(function(id){ websiteDefaults[id] = document.getElementById(id).value; });
+    }
+
+    function loadWebsiteDetails(){
+      supabaseClient.from('website_details').select('*').eq('user_id', currentSession.user.id).maybeSingle()
+        .then(function(res){
+          if (res.error) { console.warn('Could not load site details:', res.error.message); return; }
+          if (res.data) {
+            applyWebsiteRow(res.data);
+            return;
+          }
+          // First time here — seed a starter row tied to this account.
+          var handle = (currentSession.user.email || 'yourbrand').split('@')[0];
+          var seedRow = {
+            user_id: currentSession.user.id,
+            site_name: '',
+            site_email: currentSession.user.email || '',
+            tagline: '',
+            about: '',
+            whatsapp: '',
+            subdomain: handle + '.fission.site'
+          };
+          supabaseClient.from('website_details').insert(seedRow).select().single().then(function(insRes){
+            if (insRes.error) { console.warn('Could not create site details:', insRes.error.message); return; }
+            applyWebsiteRow(insRes.data);
+          });
+        });
+    }
+
+    document.getElementById('saveWebsiteBtn').addEventListener('click', function(){
+      var updates = {};
+      websiteFields.forEach(function(id){
+        updates[websiteColumnMap[id]] = document.getElementById(id).value.trim();
+      });
+      var btn = document.getElementById('saveWebsiteBtn');
+      btn.disabled = true;
+      supabaseClient.from('website_details').update(updates).eq('user_id', currentSession.user.id)
+        .then(function(res){
+          btn.disabled = false;
+          if (res.error) { showToast('Could not save changes.'); return; }
+          websiteFields.forEach(function(id){ websiteDefaults[id] = document.getElementById(id).value; });
+          showToast('Website details saved.');
+        });
+    });
+    document.getElementById('resetWebsiteBtn').addEventListener('click', function(){
+      websiteFields.forEach(function(id){
+        document.getElementById(id).value = websiteDefaults[id] || '';
+      });
+      showToast('Changes reverted.');
+    });
+
+    loadWebsiteDetails();
+
+    // ----- Pages -----
+    var pages = [];
+    var pagesList = document.getElementById('pagesList');
+    pagesList.innerHTML = '<div class="empty-state">Loading pages…</div>';
+
+    function loadPages(){
+      supabaseClient.from('pages').select('*').eq('user_id', currentSession.user.id).order('created_at', { ascending: true })
+        .then(function(res){
+          if (res.error) { showToast('Could not load pages.'); return; }
+          if (res.data.length) {
+            pages = res.data;
+            renderPages();
+            return;
+          }
+          // First time here — seed a default page set for this account.
+          var seed = [
+            { user_id: currentSession.user.id, name: 'Home', published: true, is_locked: true },
+            { user_id: currentSession.user.id, name: 'About', published: true, is_locked: false },
+            { user_id: currentSession.user.id, name: 'Services', published: true, is_locked: false },
+            { user_id: currentSession.user.id, name: 'Gallery', published: false, is_locked: false },
+            { user_id: currentSession.user.id, name: 'Contact', published: true, is_locked: false }
+          ];
+          supabaseClient.from('pages').insert(seed).select().then(function(insRes){
+            if (insRes.error) { showToast('Could not set up default pages.'); return; }
+            pages = insRes.data;
+            renderPages();
+          });
+        });
+    }
+
+    function renderPages(){
+      pagesList.innerHTML = '';
+      if (!pages.length) {
+        pagesList.innerHTML = '<div class="empty-state">No pages yet — add your first one above.</div>';
+        return;
+      }
+      pages.forEach(function(page){
+        var row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML =
+          '<div class="item-info">' +
+            '<div class="item-title">' + escapeHtml(page.name) + '</div>' +
+            '<div class="item-sub">' + (page.published ? 'Published' : 'Draft') + '</div>' +
+          '</div>' +
+          '<div class="item-actions">' +
+            '<button class="toggle ' + (page.published ? 'on' : '') + '" data-id="' + page.id + '" aria-label="Toggle published"></button>' +
+            (page.is_locked ? '' : '<button class="icon-btn danger" data-del="' + page.id + '" aria-label="Delete page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6"/></svg></button>') +
+          '</div>';
+        pagesList.appendChild(row);
+      });
+
+      pagesList.querySelectorAll('.toggle').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var id = btn.dataset.id;
+          var page = pages.find(function(p){ return p.id === id; });
+          if (!page) return;
+          var newVal = !page.published;
+          btn.disabled = true;
+          supabaseClient.from('pages').update({ published: newVal }).eq('id', id).then(function(res){
+            btn.disabled = false;
+            if (res.error) { showToast('Could not update page.'); return; }
+            page.published = newVal;
+            renderPages();
+            showToast(page.name + ' is now ' + (page.published ? 'published' : 'a draft') + '.');
+          });
+        });
+      });
+      pagesList.querySelectorAll('[data-del]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var id = btn.dataset.del;
+          var page = pages.find(function(p){ return p.id === id; });
+          if (!page) return;
+          btn.disabled = true;
+          supabaseClient.from('pages').delete().eq('id', id).then(function(res){
+            if (res.error) { btn.disabled = false; showToast('Could not delete page.'); return; }
+            pages = pages.filter(function(p){ return p.id !== id; });
+            renderPages();
+            showToast(page.name + ' page deleted.');
+          });
+        });
+      });
+    }
+
+    var addPageForm = document.getElementById('addPageForm');
+    var addPageToggle = document.getElementById('addPageToggle');
+    addPageToggle.addEventListener('click', function(){
+      addPageForm.classList.toggle('open');
+      if (addPageForm.classList.contains('open')) document.getElementById('newPageName').focus();
+    });
+    document.getElementById('cancelPageBtn').addEventListener('click', function(){
+      addPageForm.classList.remove('open');
+      addPageForm.reset();
+    });
+    addPageForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = document.getElementById('newPageName').value.trim();
+      if (!name) return;
+      var submitBtn = addPageForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      supabaseClient.from('pages').insert({ user_id: currentSession.user.id, name: name, published: false, is_locked: false }).select().single()
+        .then(function(res){
+          submitBtn.disabled = false;
+          if (res.error) { showToast('Could not add page.'); return; }
+          pages.push(res.data);
+          addPageForm.reset();
+          addPageForm.classList.remove('open');
+          renderPages();
+          showToast(name + ' page added as a draft.');
+        });
+    });
+
+    loadPages();
+
+    // ----- Products -----
+    var products = [];
+    var productsList = document.getElementById('productsList');
+    var productSearch = document.getElementById('productSearch');
+    productsList.innerHTML = '<div class="empty-state">Loading products…</div>';
+
+    function formatNaira(n){
+      return '₦' + Number(n).toLocaleString('en-NG');
+    }
+
+    function loadProducts(){
+      supabaseClient.from('products').select('*').eq('user_id', currentSession.user.id).order('created_at', { ascending: true })
+        .then(function(res){
+          if (res.error) { showToast('Could not load products.'); return; }
+          if (res.data.length) {
+            products = res.data;
+            renderProducts();
+            return;
+          }
+          var seed = [
+            { user_id: currentSession.user.id, name: 'Rose Bouquet', price: 15000, stock: 22 },
+            { user_id: currentSession.user.id, name: 'Ankara Tote Bag', price: 8500, stock: 14 },
+            { user_id: currentSession.user.id, name: 'Scented Candle Set', price: 6000, stock: 0 },
+            { user_id: currentSession.user.id, name: 'Gift Hamper — Small', price: 22000, stock: 7 }
+          ];
+          supabaseClient.from('products').insert(seed).select().then(function(insRes){
+            if (insRes.error) { showToast('Could not set up sample products.'); return; }
+            products = insRes.data;
+            renderProducts();
+          });
+        });
+    }
+
+    function renderProducts(){
+      var query = productSearch.value.trim().toLowerCase();
+      var filtered = products.filter(function(p){ return p.name.toLowerCase().indexOf(query) !== -1; });
+      productsList.innerHTML = '';
+      if (!filtered.length) {
+        productsList.innerHTML = '<div class="empty-state">No products found.</div>';
+        return;
+      }
+      filtered.forEach(function(p){
+        var row = document.createElement('div');
+        row.className = 'item-row';
+        var stockBadge = p.stock === 0
+          ? '<span class="badge badge-red">Out of stock</span>'
+          : (p.stock <= 5 ? '<span class="badge badge-amber">Low stock — ' + p.stock + '</span>' : '<span class="badge badge-green">' + p.stock + ' in stock</span>');
+        row.innerHTML =
+          '<div class="item-info">' +
+            '<div class="item-title">' + escapeHtml(p.name) + '</div>' +
+            '<div class="item-sub">' + formatNaira(p.price) + ' · ' + stockBadge + '</div>' +
+          '</div>' +
+          '<div class="item-actions">' +
+            '<button class="icon-btn" data-restock="' + p.id + '" aria-label="Restock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></button>' +
+            '<button class="icon-btn danger" data-delprod="' + p.id + '" aria-label="Delete product"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6"/></svg></button>' +
+          '</div>';
+        productsList.appendChild(row);
+      });
+
+      productsList.querySelectorAll('[data-restock]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var id = btn.dataset.restock;
+          var product = products.find(function(x){ return x.id === id; });
+          if (!product) return;
+          var newStock = product.stock + 10;
+          btn.disabled = true;
+          supabaseClient.from('products').update({ stock: newStock }).eq('id', id).then(function(res){
+            btn.disabled = false;
+            if (res.error) { showToast('Could not restock product.'); return; }
+            product.stock = newStock;
+            renderProducts();
+            showToast(product.name + ' restocked (+10).');
+          });
+        });
+      });
+      productsList.querySelectorAll('[data-delprod]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var id = btn.dataset.delprod;
+          var product = products.find(function(x){ return x.id === id; });
+          if (!product) return;
+          btn.disabled = true;
+          supabaseClient.from('products').delete().eq('id', id).then(function(res){
+            if (res.error) { btn.disabled = false; showToast('Could not delete product.'); return; }
+            products = products.filter(function(x){ return x.id !== id; });
+            renderProducts();
+            showToast(product.name + ' removed from your catalogue.');
+          });
+        });
+      });
+    }
+
+    productSearch.addEventListener('input', renderProducts);
+
+    var addProductForm = document.getElementById('addProductForm');
+    var addProductToggle = document.getElementById('addProductToggle');
+    addProductToggle.addEventListener('click', function(){
+      addProductForm.classList.toggle('open');
+      if (addProductForm.classList.contains('open')) document.getElementById('newProductName').focus();
+    });
+    document.getElementById('cancelProductBtn').addEventListener('click', function(){
+      addProductForm.classList.remove('open');
+      addProductForm.reset();
+    });
+    addProductForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = document.getElementById('newProductName').value.trim();
+      var price = Number(document.getElementById('newProductPrice').value);
+      var stock = Number(document.getElementById('newProductStock').value);
+      if (!name || isNaN(price) || isNaN(stock)) return;
+      var submitBtn = addProductForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      supabaseClient.from('products').insert({ user_id: currentSession.user.id, name: name, price: price, stock: stock }).select().single()
+        .then(function(res){
+          submitBtn.disabled = false;
+          if (res.error) { showToast('Could not add product.'); return; }
+          products.push(res.data);
+          addProductForm.reset();
+          addProductForm.classList.remove('open');
+          renderProducts();
+          showToast(name + ' added to your catalogue.');
+        });
+    });
+
+    loadProducts();
+
+    // ----- Orders -----
+    var orders = [];
+    var ordersList = document.getElementById('ordersList');
+    var orderFilter = document.getElementById('orderFilter');
+    ordersList.innerHTML = '<div class="empty-state">Loading orders…</div>';
+
+    function statusBadge(status){
+      if (status === 'fulfilled') return '<span class="badge badge-green">Fulfilled</span>';
+      if (status === 'cancelled') return '<span class="badge badge-red">Cancelled</span>';
+      return '<span class="badge badge-amber">Pending</span>';
+    }
+
+    function loadOrders(){
+      supabaseClient.from('orders').select('*').eq('user_id', currentSession.user.id).order('created_at', { ascending: false })
+        .then(function(res){
+          if (res.error) { showToast('Could not load orders.'); return; }
+          if (res.data.length) {
+            orders = res.data;
+            renderOrders();
+            return;
+          }
+          var seed = [
+            { user_id: currentSession.user.id, customer: 'Chidinma A.', items: 'Rose Bouquet ×2', total: 30000, status: 'pending' },
+            { user_id: currentSession.user.id, customer: 'Tunde O.', items: 'Gift Hamper — Small', total: 22000, status: 'fulfilled' },
+            { user_id: currentSession.user.id, customer: 'Amaka N.', items: 'Scented Candle Set', total: 6000, status: 'cancelled' },
+            { user_id: currentSession.user.id, customer: 'Bloom & Co.', items: 'Ankara Tote Bag ×3', total: 25500, status: 'pending' }
+          ];
+          supabaseClient.from('orders').insert(seed).select().then(function(insRes){
+            if (insRes.error) { showToast('Could not set up sample orders.'); return; }
+            orders = insRes.data;
+            renderOrders();
+          });
+        });
+    }
+
+    function renderOrders(){
+      var filterVal = orderFilter.value;
+      var filtered = orders.filter(function(o){ return filterVal === 'all' || o.status === filterVal; });
+      ordersList.innerHTML = '';
+      if (!filtered.length) {
+        ordersList.innerHTML = '<div class="empty-state">No orders match this filter.</div>';
+        return;
+      }
+      filtered.forEach(function(o){
+        var row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML =
+          '<div class="item-info">' +
+            '<div class="item-title">' + escapeHtml(o.customer) + '</div>' +
+            '<div class="item-sub">' + escapeHtml(o.items) + ' · ' + formatNaira(o.total) + ' · ' + statusBadge(o.status) + '</div>' +
+          '</div>' +
+          '<div class="item-actions">' +
+            (o.status === 'pending' ? '<button class="btn btn-ghost btn-sm" data-fulfill="' + o.id + '">Mark fulfilled</button>' : '') +
+          '</div>';
+        ordersList.appendChild(row);
+      });
+
+      ordersList.querySelectorAll('[data-fulfill]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var id = btn.dataset.fulfill;
+          var order = orders.find(function(x){ return x.id === id; });
+          if (!order) return;
+          btn.disabled = true;
+          supabaseClient.from('orders').update({ status: 'fulfilled' }).eq('id', id).then(function(res){
+            if (res.error) { btn.disabled = false; showToast('Could not update order.'); return; }
+            order.status = 'fulfilled';
+            renderOrders();
+            showToast('Order for ' + order.customer + ' marked fulfilled.');
+          });
+        });
+      });
+    }
+
+    orderFilter.addEventListener('change', renderOrders);
+    loadOrders();
+
+    function escapeHtml(str){
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+  }
+})();
+</script>
+</body>
+</html>
