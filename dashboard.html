@@ -255,7 +255,7 @@
     gap:12px;
     margin-bottom:22px;
   }
-  @media (min-width:640px){ .stat-grid{ grid-template-columns:repeat(4,1fr); } }
+  @media (min-width:640px){ .stat-grid{ grid-template-columns:repeat(3,1fr); } }
   .stat{
     background:#fff; border:1px solid var(--line);
     border-radius:var(--radius-md); padding:14px;
@@ -525,22 +525,17 @@
             <div class="stat">
               <div class="label">Visitors</div>
               <div class="value" id="statVisitors">0</div>
-              <div class="delta" style="color:var(--ink-faint); font-weight:600;">Real count</div>
+              <div class="delta" style="color:var(--ink-faint); font-weight:600;">Site-wide</div>
             </div>
             <div class="stat">
               <div class="label">Page Views</div>
               <div class="value" id="statPageViews">0</div>
-              <div class="delta" style="color:var(--ink-faint); font-weight:600;">Real count</div>
+              <div class="delta" style="color:var(--ink-faint); font-weight:600;">Site-wide</div>
             </div>
             <div class="stat">
               <div class="label">Leads</div>
               <div class="value" id="statLeads">0</div>
-              <div class="delta" style="color:var(--ink-faint); font-weight:600;">Real count</div>
-            </div>
-            <div class="stat">
-              <div class="label">Bookings</div>
-              <div class="value" id="statBookings">0</div>
-              <div class="delta" style="color:var(--ink-faint); font-weight:600;">Real count</div>
+              <div class="delta" style="color:var(--ink-faint); font-weight:600;">Site-wide</div>
             </div>
           </div>
 
@@ -656,6 +651,21 @@
   var SUPABASE_URL = 'https://peuhprnoszejkwtczzmv.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_BTPwUe4Cfe5UaTat8VP1Jw_YH5o4IMr';
   var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // ---------- Real visit tracking (visitors + page views) ----------
+  (function(){
+    try {
+      var vId = localStorage.getItem('fission_vid');
+      if (!vId) {
+        vId = 'v_' + Date.now().toString(36) + Math.random().toString(36).slice(2);
+        localStorage.setItem('fission_vid', vId);
+      }
+      supabaseClient.from('site_visits').insert({
+        visitor_id: vId,
+        page: location.pathname.split('/').pop() || 'dashboard.html'
+      });
+    } catch(e) { /* localStorage unavailable — skip tracking silently */ }
+  })();
 
   var gateScreen = document.getElementById('gateScreen');
   var gateMsg = document.getElementById('gateMsg');
@@ -1062,28 +1072,25 @@
 
     loadWebsiteDetails();
 
-    // ----- Real stats (Visitors / Page Views / Leads / Bookings) -----
-    // Backed by a `site_stats` row per account, starting at 0. These grow
-    // for real once actual traffic/events are reported — see the
-    // `log_site_event` note in the project's SQL for wiring a live site
-    // to report visits, leads, and bookings back here.
+    // ----- Real stats (Visitors / Page Views / Leads) -----
+    // Site-wide, not per-account: every page load across index.html,
+    // dashboard.html and admin.html logs a row to `site_visits`
+    // (Visitors = distinct visitor_id, Page Views = total rows), and
+    // every plan chosen on the pricing page logs a row to `leads_log`.
     function loadStats(){
-      supabaseClient.from('site_stats').select('*').eq('user_id', currentSession.user.id).maybeSingle()
+      supabaseClient.from('site_visits').select('visitor_id', { count: 'exact' })
         .then(function(res){
-          if (res.error) { console.warn('Could not load stats:', res.error.message); return; }
-          if (res.data) { applyStats(res.data); return; }
-          supabaseClient.from('site_stats').insert({ user_id: currentSession.user.id }).select().single()
-            .then(function(insRes){
-              if (insRes.error) { console.warn('Could not create stats row:', insRes.error.message); return; }
-              applyStats(insRes.data);
-            });
+          if (res.error) { console.warn('Could not load visit stats:', res.error.message); return; }
+          var uniqueVisitors = new Set((res.data || []).map(function(r){ return r.visitor_id; })).size;
+          document.getElementById('statVisitors').textContent = uniqueVisitors.toLocaleString('en-NG');
+          document.getElementById('statPageViews').textContent = (res.count || 0).toLocaleString('en-NG');
         });
-    }
-    function applyStats(row){
-      document.getElementById('statVisitors').textContent = (row.visitors || 0).toLocaleString('en-NG');
-      document.getElementById('statPageViews').textContent = (row.page_views || 0).toLocaleString('en-NG');
-      document.getElementById('statLeads').textContent = (row.leads || 0).toLocaleString('en-NG');
-      document.getElementById('statBookings').textContent = (row.bookings || 0).toLocaleString('en-NG');
+
+      supabaseClient.from('leads_log').select('id', { count: 'exact', head: true })
+        .then(function(res){
+          if (res.error) { console.warn('Could not load lead stats:', res.error.message); return; }
+          document.getElementById('statLeads').textContent = (res.count || 0).toLocaleString('en-NG');
+        });
     }
     loadStats();
 
