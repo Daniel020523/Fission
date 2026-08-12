@@ -1663,8 +1663,17 @@
       billing_frequency: pricing.billingFrequency,
       details_submitted: false
     }).then(function(res){
-      if (res.error) console.warn('Could not save plan selection:', res.error.message);
-      window.location.href = 'dashboard.html';
+      if (res.error) {
+        console.warn('Could not save plan selection:', res.error.message);
+        window.location.href = 'dashboard.html';
+        return;
+      }
+      supabaseClient.from('notifications').insert({
+        user_id: currentSession.user.id,
+        message: 'You selected the ' + planName + ' plan.'
+      }).then(function(){
+        window.location.href = 'dashboard.html';
+      });
     }).catch(function(){
       window.location.href = 'dashboard.html';
     });

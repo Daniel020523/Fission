@@ -298,6 +298,21 @@
       <div class="sub-list" id="subList">
         <div class="empty-state">Loading submissions…</div>
       </div>
+
+      <div class="content-head" style="margin-top:34px;">
+        <div>
+          <h2>Customer messages</h2>
+          <p>Website change requests sent from customer dashboards.</p>
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-tab active" data-msg-filter="new">New <span class="count-pill" id="msgNewCount">0</span></button>
+          <button class="filter-tab" data-msg-filter="all">All <span class="count-pill" id="msgAllCount">0</span></button>
+        </div>
+      </div>
+
+      <div class="sub-list" id="msgList">
+        <div class="empty-state">Loading messages…</div>
+      </div>
     </main>
   </div>
 
@@ -407,7 +422,7 @@
     var subList = document.getElementById('subList');
     var newCountEl = document.getElementById('newCount');
     var allCountEl = document.getElementById('allCount');
-    var filterTabs = document.querySelectorAll('.filter-tab');
+    var filterTabs = document.querySelectorAll('[data-filter]');
     var currentFilter = 'new';
     var submissions = [];
 
@@ -526,12 +541,119 @@
               setTimeout(function(){ note.classList.remove('show'); }, 3000);
             }
             showToast('Website URL saved for this customer.');
+            if (url && row) {
+              supabaseClient.from('notifications').insert({
+                user_id: row.user_id,
+                message: '🎉 Your website is now live!'
+              });
+            }
           });
         });
       });
     }
 
     loadSubmissions();
+
+    // ---------- Customer messages ----------
+    var msgList = document.getElementById('msgList');
+    var msgNewCountEl = document.getElementById('msgNewCount');
+    var msgAllCountEl = document.getElementById('msgAllCount');
+    var msgFilterTabs = document.querySelectorAll('[data-msg-filter]');
+    var msgCurrentFilter = 'new';
+    var messages = [];
+
+    msgFilterTabs.forEach(function(tab){
+      tab.addEventListener('click', function(){
+        msgFilterTabs.forEach(function(t){ t.classList.remove('active'); });
+        tab.classList.add('active');
+        msgCurrentFilter = tab.dataset.msgFilter;
+        renderMessages();
+      });
+    });
+
+    function contactFor(userId){
+      var match = submissions.find(function(s){ return s.user_id === userId; });
+      return match ? { email: match.contact_email, whatsapp: match.whatsapp_number } : null;
+    }
+
+    function loadMessages(){
+      supabaseClient.from('messages').select('*').order('created_at', { ascending: false })
+        .then(function(res){
+          if (res.error) {
+            msgList.innerHTML = '<div class="empty-state">Could not load messages.</div>';
+            console.warn(res.error.message);
+            return;
+          }
+          messages = res.data;
+          renderMessages();
+        });
+    }
+
+    function renderMessages(){
+      var newOnes = messages.filter(function(m){ return !m.seen; });
+      msgNewCountEl.textContent = newOnes.length;
+      msgAllCountEl.textContent = messages.length;
+
+      var list = msgCurrentFilter === 'new' ? newOnes : messages;
+      msgList.innerHTML = '';
+
+      if (!list.length) {
+        msgList.innerHTML =
+          '<div class="empty-state"><div class="big">💬</div>' +
+          (msgCurrentFilter === 'new' ? "You're all caught up — no new messages." : 'No messages yet.') +
+          '</div>';
+        return;
+      }
+
+      list.forEach(function(row){
+        var contact = contactFor(row.user_id);
+        var card = document.createElement('div');
+        card.className = 'sub-card' + (row.seen ? '' : ' is-new');
+        card.innerHTML =
+          '<div class="sub-head">' +
+            '<div>' +
+              '<div class="sub-plan">' + (row.seen ? '<span class="seen-badge">Seen</span>' : '<span class="new-badge">New</span>') + escapeHtml(row.plan_name || 'Fission') + '</div>' +
+            '</div>' +
+            '<div class="sub-date">' + formatDate(row.created_at) + '</div>' +
+          '</div>' +
+          '<div class="sub-desc">' + escapeHtml(row.message) + '</div>' +
+          (contact ? (
+            '<div class="sub-contact">' +
+              (contact.email ? '<a class="contact-chip" href="mailto:' + escapeHtml(contact.email) + '">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>' +
+                escapeHtml(contact.email) + '</a>' : '') +
+              (contact.whatsapp ? '<a class="contact-chip" href="' + waLink(contact.whatsapp) + '" target="_blank" rel="noopener">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>' +
+                escapeHtml(contact.whatsapp) + '</a>' : '') +
+            '</div>'
+          ) : '<p class="sub" style="margin:0 0 12px; font-size:11.5px;">No contact info on file for this customer.</p>') +
+          '<div class="sub-actions">' +
+            (row.seen ? '' : '<button class="btn btn-primary btn-sm" data-mark-msg-seen="' + row.id + '">Mark seen &amp; notify customer</button>') +
+          '</div>';
+        msgList.appendChild(card);
+      });
+
+      msgList.querySelectorAll('[data-mark-msg-seen]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var id = btn.dataset.markMsgSeen;
+          var row = messages.find(function(m){ return m.id === id; });
+          if (!row) return;
+          btn.disabled = true;
+          supabaseClient.from('messages').update({ seen: true }).eq('id', id).then(function(res){
+            if (res.error) { btn.disabled = false; showToast('Could not update — please try again.'); return; }
+            row.seen = true;
+            renderMessages();
+            showToast('Marked as seen — customer notified.');
+            supabaseClient.from('notifications').insert({
+              user_id: row.user_id,
+              message: 'Fission has seen your request and is working on it.'
+            });
+          });
+        });
+      });
+    }
+
+    loadMessages();
   }
 })();
 </script>
