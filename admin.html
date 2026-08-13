@@ -514,8 +514,18 @@
         btn.addEventListener('click', function(){
           var id = btn.dataset.markSeen;
           btn.disabled = true;
-          supabaseClient.from('plan_selections').update({ seen: true }).eq('id', id).then(function(res){
-            if (res.error) { btn.disabled = false; showToast('Could not update — please try again.'); return; }
+          supabaseClient.from('plan_selections').update({ seen: true }).eq('id', id).select().then(function(res){
+            if (res.error) {
+              btn.disabled = false;
+              console.warn('Could not mark submission seen:', res.error.message);
+              showToast('Could not update: ' + res.error.message);
+              return;
+            }
+            if (!res.data || !res.data.length) {
+              btn.disabled = false;
+              showToast('Update was blocked — check that your account is in the admins table.');
+              return;
+            }
             var row = submissions.find(function(s){ return s.id === id; });
             if (row) row.seen = true;
             showToast('Marked as seen.');
@@ -530,9 +540,17 @@
           var input = subList.querySelector('[data-url-input="' + id + '"]');
           var url = input.value.trim();
           btn.disabled = true;
-          supabaseClient.from('plan_selections').update({ website_url: url }).eq('id', id).then(function(res){
+          supabaseClient.from('plan_selections').update({ website_url: url }).eq('id', id).select().then(function(res){
             btn.disabled = false;
-            if (res.error) { showToast('Could not save the URL — please try again.'); return; }
+            if (res.error) {
+              console.warn('Could not save URL:', res.error.message);
+              showToast('Could not save the URL: ' + res.error.message);
+              return;
+            }
+            if (!res.data || !res.data.length) {
+              showToast('Update was blocked — check that your account is in the admins table.');
+              return;
+            }
             var row = submissions.find(function(s){ return s.id === id; });
             if (row) row.website_url = url;
             var note = document.getElementById('urlNote-' + id);
@@ -545,6 +563,8 @@
               supabaseClient.from('notifications').insert({
                 user_id: row.user_id,
                 message: '🎉 Your website is now live!'
+              }).then(function(notifRes){
+                if (notifRes.error) console.warn('Could not send live-site notification:', notifRes.error.message);
               });
             }
           });
@@ -639,14 +659,31 @@
           var row = messages.find(function(m){ return m.id === id; });
           if (!row) return;
           btn.disabled = true;
-          supabaseClient.from('messages').update({ seen: true }).eq('id', id).then(function(res){
-            if (res.error) { btn.disabled = false; showToast('Could not update — please try again.'); return; }
+          supabaseClient.from('messages').update({ seen: true }).eq('id', id).select().then(function(res){
+            if (res.error) {
+              btn.disabled = false;
+              console.warn('Could not mark message seen:', res.error.message);
+              showToast('Could not update: ' + res.error.message);
+              return;
+            }
+            if (!res.data || !res.data.length) {
+              btn.disabled = false;
+              showToast('Update was blocked — check that your account is in the admins table.');
+              return;
+            }
             row.seen = true;
             renderMessages();
-            showToast('Marked as seen — customer notified.');
+
             supabaseClient.from('notifications').insert({
               user_id: row.user_id,
               message: 'Fission has seen your request and is working on it.'
+            }).select().then(function(notifRes){
+              if (notifRes.error) {
+                console.warn('Could not send notification:', notifRes.error.message);
+                showToast('Marked as seen, but the notification failed: ' + notifRes.error.message);
+                return;
+              }
+              showToast('Marked as seen — customer notified.');
             });
           });
         });

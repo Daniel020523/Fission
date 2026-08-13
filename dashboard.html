@@ -1057,7 +1057,8 @@
         msgSubmitBtn.textContent = 'Send message';
         if (res.error) {
           msgSubmitBtn.disabled = false;
-          showToast('Could not send your message — please try again.');
+          console.warn('Could not send message:', res.error.message);
+          showToast('Could not send your message: ' + res.error.message);
           return;
         }
         allMessages.unshift(res.data);
