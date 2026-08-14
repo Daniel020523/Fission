@@ -622,23 +622,26 @@
   // send the person back to the marketing site to sign up or log in,
   // and remember to bounce them straight back here afterwards.
   //
-  // NOTE: we validate with getUser() rather than getSession(). getSession()
-  // just reads whatever is cached in local storage and can return a session
-  // object even when it's stale/expired, which was causing index.html and
-  // dashboard.html to disagree about auth state and bounce the visitor back
-  // and forth forever. getUser() revalidates against Supabase directly.
-  //
-  // BOUNCE_GUARD_KEY is a belt-and-suspenders safety net: if we somehow still
-  // end up redirected here right after being sent to index.html for auth, we
-  // stop auto-redirecting and show a manual link instead of looping forever.
-  var BOUNCE_GUARD_KEY = 'fissionAuthBounceGuard';
+  // BOUNCE_COUNT_KEY is a hard circuit breaker shared with index.html (same
+  // sessionStorage, same key name on both pages). Every automatic redirect,
+  // in EITHER direction, increments it. Once it hits the cap, neither page
+  // will auto-redirect again — this guarantees the loop physically cannot
+  // continue, no matter what is actually causing the two pages to disagree.
+  var BOUNCE_COUNT_KEY = 'fissionAuthBounceCount';
+  var BOUNCE_CAP = 2;
 
-  function redirectToAuth(){
-    if (sessionStorage.getItem(BOUNCE_GUARD_KEY) === '1') {
+  function bounceCount(){
+    return parseInt(sessionStorage.getItem(BOUNCE_COUNT_KEY) || '0', 10);
+  }
+
+  function redirectToAuth(reason){
+    console.warn('[dashboard] auth check failed, reason:', reason);
+    if (bounceCount() >= BOUNCE_CAP) {
+      console.error('[dashboard] bounce cap reached — stopping auto-redirects. See the warning above for the actual failure reason.');
       gateMsg.innerHTML = 'We couldn\'t confirm you\'re signed in. <a href="index.html?auth=1&redirect=dashboard" style="text-decoration:underline;">Click here to sign in</a>.';
       return;
     }
-    sessionStorage.setItem(BOUNCE_GUARD_KEY, '1');
+    sessionStorage.setItem(BOUNCE_COUNT_KEY, String(bounceCount() + 1));
     gateMsg.textContent = 'Please sign in to view your dashboard — redirecting…';
     setTimeout(function(){
       window.location.href = 'index.html?auth=1&redirect=dashboard';
@@ -646,12 +649,11 @@
   }
 
   supabaseClient.auth.getUser().then(function(res){
-    var user = res.data.user;
-    if (!user) {
-      redirectToAuth();
+    if (res.error || !res.data.user) {
+      redirectToAuth(res.error || 'no user returned');
       return;
     }
-    sessionStorage.removeItem(BOUNCE_GUARD_KEY);
+    sessionStorage.removeItem(BOUNCE_COUNT_KEY);
     return supabaseClient.auth.getSession().then(function(res2){
       currentSession = res2.data.session;
       applySession(currentSession);
@@ -659,8 +661,8 @@
       shell.classList.add('ready');
       initInteractivity();
     });
-  }).catch(function(){
-    redirectToAuth();
+  }).catch(function(err){
+    redirectToAuth(err);
   });
 
   supabaseClient.auth.onAuthStateChange(function(event, session){

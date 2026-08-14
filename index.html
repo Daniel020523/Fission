@@ -1577,12 +1577,24 @@
   var siteFrame = document.getElementById('siteFrame');
 
   // Use getUser() (server-validated) rather than getSession() (locally
-  // cached, can be stale/expired) as the source of truth here. This has to
-  // match what dashboard.html uses for its own auth guard — mismatched
-  // sources of truth were the cause of the index.html <-> dashboard.html
-  // refresh loop: index.html trusted a stale cached session and bounced
-  // back to dashboard.html, which correctly rejected it and bounced back.
+  // cached, can be stale/expired) as the source of truth here, to match
+  // dashboard.html's own check.
+  //
+  // BOUNCE_COUNT_KEY is a hard circuit breaker shared with dashboard.html
+  // (same sessionStorage key on both pages). Every automatic redirect, in
+  // EITHER direction, increments it. Once it hits the cap, this page will
+  // NOT auto-redirect to the dashboard even if it finds a session — it'll
+  // show the normal marketing page with a manual sign-in link instead. This
+  // guarantees the two pages can't keep bouncing the visitor back and forth.
+  var BOUNCE_COUNT_KEY = 'fissionAuthBounceCount';
+  var BOUNCE_CAP = 2;
+  function bounceCount(){
+    try { return parseInt(sessionStorage.getItem(BOUNCE_COUNT_KEY) || '0', 10); }
+    catch (e) { return 0; }
+  }
+
   supabaseClient.auth.getUser().then(function(res){
+    if (res.error) console.warn('[index] getUser error:', res.error);
     var user = res.data.user;
 
     return supabaseClient.auth.getSession().then(function(res2){
@@ -1592,11 +1604,18 @@
       // Entry-point gate: signed-in visitors go straight to their
       // dashboard; everyone else sees this marketing site as normal.
       if (currentSession) {
-        try { sessionStorage.removeItem('fissionAuthBounceGuard'); } catch (e) {}
+        if (bounceCount() >= BOUNCE_CAP) {
+          console.error('[index] bounce cap reached — not auto-redirecting to dashboard.html. A valid session was found but the pages disagreed earlier; check console warnings above for why.');
+          siteGate.classList.add('hidden');
+          siteFrame.classList.add('ready');
+          return;
+        }
+        try { sessionStorage.setItem(BOUNCE_COUNT_KEY, String(bounceCount() + 1)); } catch (e) {}
         window.location.href = 'dashboard.html';
         return;
       }
 
+      try { sessionStorage.removeItem(BOUNCE_COUNT_KEY); } catch (e) {}
       siteGate.classList.add('hidden');
       siteFrame.classList.add('ready');
 
@@ -1604,7 +1623,8 @@
         openAuthModal('signup');
       }
     });
-  }).catch(function(){
+  }).catch(function(err){
+    console.warn('[index] session check failed:', err);
     // If the session check fails for any reason, fail open to the
     // marketing site rather than leaving the visitor on a blank gate.
     siteGate.classList.add('hidden');
