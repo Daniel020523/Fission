@@ -79,69 +79,6 @@
     #shell.ready{ display:flex; }
   }
 
-  /* ---------- Sidebar ---------- */
-  .sidebar{
-    position:fixed;
-    top:0; left:0; bottom:0;
-    width:230px;
-    background:#fff;
-    border-right:1px solid var(--line);
-    padding:20px 14px;
-    display:flex;
-    flex-direction:column;
-    transform:translateX(-100%);
-    transition:transform 0.25s ease;
-    z-index:60;
-  }
-  .sidebar.open{ transform:translateX(0); }
-  @media (min-width:960px){
-    .sidebar{ position:sticky; transform:none; flex-shrink:0; }
-  }
-
-  .sb-backdrop{
-    position:fixed; inset:0;
-    background:rgba(20,20,31,0.45);
-    z-index:55;
-    display:none;
-  }
-  .sb-backdrop.open{ display:block; }
-  @media (min-width:960px){ .sb-backdrop{ display:none !important; } }
-
-  .sb-logo{
-    display:flex; align-items:center; gap:8px;
-    font-weight:800; font-size:15px;
-    padding:4px 8px 20px;
-  }
-  .sb-nav{ display:flex; flex-direction:column; gap:4px; flex:1; }
-  .sb-item{
-    display:flex; align-items:center; gap:10px;
-    padding:11px 12px;
-    border-radius:10px;
-    font-size:13.5px; font-weight:600;
-    color:var(--ink-soft);
-    border:none; background:none;
-    width:100%; text-align:left;
-    cursor:pointer;
-  }
-  .sb-item svg{ width:17px; height:17px; flex-shrink:0; }
-  .sb-item:hover{ background:var(--purple-light); color:var(--purple); }
-  .sb-item.active{
-    background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
-    color:#fff;
-  }
-  .sb-foot{
-    border-top:1px solid var(--line);
-    padding-top:14px;
-    margin-top:14px;
-  }
-  .sb-back{
-    display:flex; align-items:center; gap:8px;
-    font-size:12.5px; font-weight:700;
-    color:var(--ink-faint);
-    padding:9px 12px;
-  }
-  .sb-back:hover{ color:var(--purple); }
-
   /* ---------- Main column ---------- */
   .main-col{ flex:1; min-width:0; }
 
@@ -157,17 +94,6 @@
     gap:12px;
   }
   .tb-left{ display:flex; align-items:center; gap:12px; min-width:0; }
-  .hamburger{
-    display:flex;
-    width:34px; height:34px;
-    border-radius:10px;
-    border:1px solid var(--line);
-    background:#fff;
-    align-items:center; justify-content:center;
-    cursor:pointer;
-    flex-shrink:0;
-  }
-  @media (min-width:960px){ .hamburger{ display:none; } }
   .tb-title h1{
     font-size:15px; font-weight:800; margin:0;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
@@ -402,37 +328,10 @@
 
   <!-- ---------- Dashboard shell ---------- -->
   <div id="shell">
-    <div class="sb-backdrop" id="sbBackdrop"></div>
-
-    <aside class="sidebar" id="sidebar">
-      <div class="sb-logo">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 2L5 13H11L9 22L19 10H12L14 2Z" fill="url(#g3)"/><defs><linearGradient id="g3" x1="5" y1="2" x2="19" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#7C5CFC"/><stop offset="1" stop-color="#5A38E8"/></linearGradient></defs></svg>
-        FISSION
-      </div>
-      <nav class="sb-nav" id="sbNav">
-        <button class="sb-item active" data-panel="overview">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
-          Dashboard
-        </button>
-        <button class="sb-item" data-panel="website">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
-          My Website
-        </button>
-      </nav>
-      <div class="sb-foot">
-        <a href="index.html" class="sb-back">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Back to site
-        </a>
-      </div>
-    </aside>
 
     <div class="main-col">
       <header class="topbar">
         <div class="tb-left">
-          <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-          </button>
           <div class="tb-title">
             <h1 id="panelTitle">Welcome back 👋</h1>
             <p id="panelSub">Here's what's happening with your website today.</p>
@@ -468,10 +367,6 @@
 
           <!-- Quick-access menu -->
           <div class="tile-grid">
-            <button class="tile" id="tilePaymentDue" type="button">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-              Payment Due
-            </button>
             <button class="tile" id="tileMyWebsite" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
               My Website
@@ -494,53 +389,6 @@
             <button class="tile tile-sm" id="tileFaq" type="button">FAQ</button>
           </div>
 
-          <!-- Plan selection / onboarding status -->
-          <div class="card" id="planStatusCard">
-            <div class="card-head">
-              <div>
-                <h3 id="planCardTitle">Choose your plan</h3>
-                <p class="sub" id="planCardSub">You haven't selected a Fission plan yet.</p>
-              </div>
-            </div>
-
-            <!-- State A: no plan selected yet -->
-            <div id="planStateNone">
-              <a href="index.html#pricing" class="btn btn-primary btn-sm">Select a Plan</a>
-            </div>
-
-            <!-- State B: plan selected, onboarding details still needed -->
-            <form class="field-grid" id="onboardingForm" style="display:none;">
-              <div class="field">
-                <label>What's your website about?</label>
-                <textarea id="obDescription" placeholder="Tell us about your business, what you sell or offer, and what you'd like your website to do…" required></textarea>
-              </div>
-              <div class="field-grid two">
-                <div class="field">
-                  <label>Email address</label>
-                  <input type="email" id="obEmail" placeholder="you@business.com" required>
-                </div>
-                <div class="field">
-                  <label>WhatsApp number</label>
-                  <input type="text" id="obWhatsapp" placeholder="+234 800 000 0000" required>
-                </div>
-              </div>
-              <p class="sub" style="margin:0;">Our team will reach out via email or WhatsApp to get your site started — so please make sure both are correct.</p>
-              <div class="form-actions">
-                <button type="submit" class="btn btn-primary btn-sm" id="obSubmitBtn">Submit details</button>
-              </div>
-            </form>
-
-            <!-- State C: details submitted -->
-            <div id="planStateDone" style="display:none;">
-              <span class="badge badge-green" id="doneBadge">Details received</span>
-              <p class="sub" style="margin:10px 0 4px;">Thanks! Our team will reach out via <strong>email</strong> or <strong>WhatsApp</strong> shortly to get your site started.</p>
-              <p class="sub" style="margin:0;" id="doneContactLine"></p>
-              <div id="websiteUrlBlock" style="display:none; margin-top:14px; padding-top:14px; border-top:1px solid var(--line);">
-                <div class="item-title" style="margin-bottom:4px;">🎉 Your website is live</div>
-                <a href="#" id="websiteUrlLink" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="margin-top:4px;">Visit your site</a>
-              </div>
-            </div>
-          </div>
         </section>
 
         <!-- ================= MY WEBSITE PANEL ================= -->
@@ -814,19 +662,16 @@
       faq:      { title: 'FAQ', sub: 'Answers to common questions.' }
     };
 
-    var sbItems = document.querySelectorAll('.sb-item');
     var panelTitle = document.getElementById('panelTitle');
     var panelSub = document.getElementById('panelSub');
 
     function goToPanel(key){
-      sbItems.forEach(function(i){ i.classList.toggle('active', i.dataset.panel === key); });
       document.querySelectorAll('.panel').forEach(function(p){
         p.classList.toggle('active', p.id === 'panel-' + key);
       });
       var meta = panelMeta[key];
       panelTitle.textContent = meta.title;
       panelSub.textContent = meta.sub;
-      closeSidebar();
     }
 
     sbItems.forEach(function(item){
@@ -845,9 +690,6 @@
         window.location.href = 'index.html#pricing';
       }
     }
-    document.getElementById('tilePaymentDue').addEventListener('click', function(){
-      scrollToId('planStatusCard');
-    });
     document.getElementById('tileMyWebsite').addEventListener('click', function(){ goToPanel('website'); });
     document.getElementById('tileCreateWebsite').addEventListener('click', goCreateWebsite);
     document.getElementById('tileReachOut').addEventListener('click', function(){
@@ -865,15 +707,6 @@
 
     document.getElementById('profileName').value = firstNameFor(currentSession);
     document.getElementById('profileEmail').value = currentSession.user.email || '';
-
-    // ----- Mobile sidebar drawer -----
-    var sidebar = document.getElementById('sidebar');
-    var sbBackdrop = document.getElementById('sbBackdrop');
-    var hamburgerBtn = document.getElementById('hamburgerBtn');
-    function openSidebar(){ sidebar.classList.add('open'); sbBackdrop.classList.add('open'); }
-    function closeSidebar(){ sidebar.classList.remove('open'); sbBackdrop.classList.remove('open'); }
-    hamburgerBtn.addEventListener('click', openSidebar);
-    sbBackdrop.addEventListener('click', closeSidebar);
 
     // ----- Account dropdown -----
     var accBtn = document.getElementById('accBtn');
@@ -971,27 +804,15 @@
 
     loadNotifications();
 
-    // ----- Plan selection / onboarding status -----
-    var planCardTitle = document.getElementById('planCardTitle');
-    var planCardSub = document.getElementById('planCardSub');
-    var planStateNone = document.getElementById('planStateNone');
-    var onboardingForm = document.getElementById('onboardingForm');
-    var planStateDone = document.getElementById('planStateDone');
-    var obSubmitBtn = document.getElementById('obSubmitBtn');
+    // ----- Plan status (kept internally for message quota + live URL; card UI removed) -----
     var liveUrlSub = document.getElementById('liveUrlSub');
     var liveUrlBtn = document.getElementById('liveUrlBtn');
     var currentPlanRow = null;
 
     function renderPlanStatus(row){
       currentPlanRow = row;
-      planStateNone.style.display = 'none';
-      onboardingForm.style.display = 'none';
-      planStateDone.style.display = 'none';
 
       if (!row) {
-        planCardTitle.textContent = 'Choose your plan';
-        planCardSub.textContent = "You haven't selected a Fission plan yet.";
-        planStateNone.style.display = 'block';
         liveUrlSub.textContent = 'Select a plan to get your website started.';
         liveUrlBtn.style.display = 'none';
         if (typeof updateMessageQuotaUI === 'function') updateMessageQuotaUI();
@@ -999,40 +820,21 @@
       }
 
       if (!row.details_submitted) {
-        planCardTitle.textContent = row.plan_name + ' selected';
-        planCardSub.textContent = (row.price_label ? row.price_label + ' · ' : '') + "Just a few details and our team takes it from here.";
-        onboardingForm.dataset.rowId = row.id;
-        document.getElementById('obDescription').value = row.website_description || '';
-        document.getElementById('obEmail').value = row.contact_email || currentSession.user.email || '';
-        document.getElementById('obWhatsapp').value = row.whatsapp_number || '';
-        onboardingForm.style.display = 'grid';
         liveUrlSub.textContent = 'Finish your onboarding details and our team will get your site started.';
         liveUrlBtn.style.display = 'none';
         if (typeof updateMessageQuotaUI === 'function') updateMessageQuotaUI();
         return;
       }
 
-      planCardTitle.textContent = row.plan_name;
-      planCardSub.textContent = (row.price_label || 'Plan selected') + ' · Onboarding complete';
-      document.getElementById('doneContactLine').textContent =
-        "We'll contact you at " + row.contact_email + ' or ' + row.whatsapp_number + '.';
-
-      var websiteUrlBlock = document.getElementById('websiteUrlBlock');
-      var websiteUrlLink = document.getElementById('websiteUrlLink');
       if (row.website_url) {
-        websiteUrlLink.href = row.website_url;
-        websiteUrlLink.textContent = 'Visit your site — ' + row.website_url;
-        websiteUrlBlock.style.display = 'block';
         liveUrlSub.textContent = row.website_url;
         liveUrlBtn.href = row.website_url;
         liveUrlBtn.style.display = 'inline-flex';
       } else {
-        websiteUrlBlock.style.display = 'none';
         liveUrlSub.textContent = "Not live yet — our team will send the link once it's ready.";
         liveUrlBtn.style.display = 'none';
       }
 
-      planStateDone.style.display = 'block';
       if (typeof updateMessageQuotaUI === 'function') updateMessageQuotaUI();
     }
 
@@ -1046,33 +848,6 @@
           renderPlanStatus(res.data && res.data.length ? res.data[0] : null);
         });
     }
-
-    onboardingForm.addEventListener('submit', function(e){
-      e.preventDefault();
-      var rowId = onboardingForm.dataset.rowId;
-      if (!rowId) return;
-      var description = document.getElementById('obDescription').value.trim();
-      var email = document.getElementById('obEmail').value.trim();
-      var whatsapp = document.getElementById('obWhatsapp').value.trim();
-      if (!description || !email || !whatsapp) return;
-
-      obSubmitBtn.disabled = true;
-      obSubmitBtn.textContent = 'Submitting…';
-
-      supabaseClient.from('plan_selections').update({
-        website_description: description,
-        contact_email: email,
-        whatsapp_number: whatsapp,
-        details_submitted: true
-      }).eq('id', rowId).select().single().then(function(res){
-        obSubmitBtn.disabled = false;
-        obSubmitBtn.textContent = 'Submit details';
-        if (res.error) { showToast('Could not submit your details — please try again.'); return; }
-        showToast("Thanks! We'll reach out via email or WhatsApp shortly.");
-        renderPlanStatus(res.data);
-        pushNotification('You submitted your website details — our team will be in touch.');
-      });
-    });
 
     loadPlanStatus();
 
