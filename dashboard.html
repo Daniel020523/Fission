@@ -273,6 +273,28 @@
   .btn-sm{ padding:7px 12px; font-size:12px; }
   .btn[disabled]{ opacity:0.55; cursor:not-allowed; }
 
+  /* ---------- Dashboard menu tiles ---------- */
+  .tile-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:12px;
+  }
+  .tile-grid.stack{ grid-template-columns:1fr; }
+  @media (max-width:520px){ .tile-grid{ grid-template-columns:1fr; } }
+  .tile{
+    display:flex; align-items:center; gap:10px;
+    background:#fff; border:1.5px solid var(--line);
+    border-radius:var(--radius-md);
+    padding:16px 18px;
+    font-size:13.5px; font-weight:700; color:var(--ink);
+    cursor:pointer; text-align:left; width:100%;
+    transition:border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .tile:hover{ border-color:var(--purple); color:var(--purple); box-shadow:0 8px 20px -12px rgba(108,76,241,0.35); }
+  .tile svg{ width:18px; height:18px; flex-shrink:0; color:var(--purple); }
+  .tile-sm{ padding:12px 16px; font-size:13px; }
+
   /* form */
   .field-grid{ display:grid; gap:14px; }
   @media (min-width:640px){ .field-grid.two{ grid-template-columns:1fr 1fr; } }
@@ -444,6 +466,34 @@
         <!-- ================= OVERVIEW PANEL ================= -->
         <section class="panel active" id="panel-overview">
 
+          <!-- Quick-access menu -->
+          <div class="tile-grid">
+            <button class="tile" id="tilePaymentDue" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+              Payment Due
+            </button>
+            <button class="tile" id="tileMyWebsite" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+              My Website
+            </button>
+          </div>
+          <div class="tile-grid">
+            <button class="tile" id="tileCreateWebsite" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+              Create New Website
+            </button>
+            <button class="tile" id="tileReachOut" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              Reach Out to Our Team
+            </button>
+          </div>
+          <div class="tile-grid stack">
+            <button class="tile tile-sm" id="tileProfile" type="button">Profile</button>
+            <button class="tile tile-sm" id="tileSupport" type="button">Support</button>
+            <button class="tile tile-sm" id="tileContact" type="button">Contact Us</button>
+            <button class="tile tile-sm" id="tileFaq" type="button">FAQ</button>
+          </div>
+
           <!-- Plan selection / onboarding status -->
           <div class="card" id="planStatusCard">
             <div class="card-head">
@@ -578,6 +628,98 @@
           </div>
         </section>
 
+        <!-- ================= PROFILE PANEL ================= -->
+        <section class="panel" id="panel-profile">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Profile</h3>
+                <p class="sub">Your account details.</p>
+              </div>
+            </div>
+            <div class="field-grid two">
+              <div class="field">
+                <label>Name</label>
+                <input type="text" id="profileName" disabled style="opacity:0.65;">
+              </div>
+              <div class="field">
+                <label>Email</label>
+                <input type="text" id="profileEmail" disabled style="opacity:0.65;">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= SUPPORT PANEL ================= -->
+        <section class="panel" id="panel-support">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Support</h3>
+                <p class="sub">Need help with your website or account?</p>
+              </div>
+            </div>
+            <p class="sub" style="margin:0 0 12px;">Send our team a message and we'll get back to you as soon as we can.</p>
+            <button class="btn btn-primary btn-sm" id="supportToMessageBtn" type="button">Message our team</button>
+          </div>
+        </section>
+
+        <!-- ================= CONTACT US PANEL ================= -->
+        <section class="panel" id="panel-contact">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Contact us</h3>
+                <p class="sub">Other ways to reach the Fission team.</p>
+              </div>
+            </div>
+            <div class="row-list">
+              <div class="item-row">
+                <div class="item-info">
+                  <div class="item-title">Email</div>
+                  <div class="item-sub">hello@fission.site</div>
+                </div>
+              </div>
+              <div class="item-row">
+                <div class="item-info">
+                  <div class="item-title">WhatsApp</div>
+                  <div class="item-sub">+234 800 000 0000</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= FAQ PANEL ================= -->
+        <section class="panel" id="panel-faq">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Frequently asked questions</h3>
+              </div>
+            </div>
+            <div class="row-list">
+              <div class="item-row">
+                <div class="item-info">
+                  <div class="item-title">How long does it take to build my website?</div>
+                  <div class="item-sub">Most sites go live within 5–7 business days after we receive your details.</div>
+                </div>
+              </div>
+              <div class="item-row">
+                <div class="item-info">
+                  <div class="item-title">Can I request changes after launch?</div>
+                  <div class="item-sub">Yes — use the message form under My Website to request edits anytime.</div>
+                </div>
+              </div>
+              <div class="item-row">
+                <div class="item-info">
+                  <div class="item-title">How do I upgrade my plan?</div>
+                  <div class="item-sub">Reach out to our team and we'll help you move to a higher plan.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
       </main>
     </div>
@@ -665,7 +807,11 @@
     // ----- Sidebar nav / panel switching -----
     var panelMeta = {
       overview: { title: 'Welcome back, ' + firstNameFor(currentSession) + ' 👋', sub: "Here's what's happening with your website today." },
-      website:  { title: 'My Website', sub: 'Edit the content visitors see on your live site.' }
+      website:  { title: 'My Website', sub: 'Edit the content visitors see on your live site.' },
+      profile:  { title: 'Profile', sub: 'Your account details.' },
+      support:  { title: 'Support', sub: 'Need help? Send our team a message.' },
+      contact:  { title: 'Contact us', sub: 'Other ways to reach the Fission team.' },
+      faq:      { title: 'FAQ', sub: 'Answers to common questions.' }
     };
 
     var sbItems = document.querySelectorAll('.sb-item');
@@ -686,6 +832,39 @@
     sbItems.forEach(function(item){
       item.addEventListener('click', function(){ goToPanel(item.dataset.panel); });
     });
+
+    // ----- Dashboard quick-access tiles -----
+    function scrollToId(id){
+      setTimeout(function(){
+        var el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+      }, 60);
+    }
+    function goCreateWebsite(){
+      if (window.confirm('Create another website? You\'ll be taken to select a new plan.')) {
+        window.location.href = 'index.html#pricing';
+      }
+    }
+    document.getElementById('tilePaymentDue').addEventListener('click', function(){
+      scrollToId('planStatusCard');
+    });
+    document.getElementById('tileMyWebsite').addEventListener('click', function(){ goToPanel('website'); });
+    document.getElementById('tileCreateWebsite').addEventListener('click', goCreateWebsite);
+    document.getElementById('tileReachOut').addEventListener('click', function(){
+      goToPanel('website');
+      scrollToId('messageForm');
+    });
+    document.getElementById('tileProfile').addEventListener('click', function(){ goToPanel('profile'); });
+    document.getElementById('tileSupport').addEventListener('click', function(){ goToPanel('support'); });
+    document.getElementById('tileContact').addEventListener('click', function(){ goToPanel('contact'); });
+    document.getElementById('tileFaq').addEventListener('click', function(){ goToPanel('faq'); });
+    document.getElementById('supportToMessageBtn').addEventListener('click', function(){
+      goToPanel('website');
+      scrollToId('messageForm');
+    });
+
+    document.getElementById('profileName').value = firstNameFor(currentSession);
+    document.getElementById('profileEmail').value = currentSession.user.email || '';
 
     // ----- Mobile sidebar drawer -----
     var sidebar = document.getElementById('sidebar');
@@ -1074,11 +1253,7 @@
     loadMessages();
 
     // ----- Create another website -----
-    document.getElementById('newWebsiteBtn').addEventListener('click', function(){
-      if (window.confirm('Create another website? You\'ll be taken to select a new plan.')) {
-        window.location.href = 'index.html#pricing';
-      }
-    });
+    document.getElementById('newWebsiteBtn').addEventListener('click', goCreateWebsite);
 
     function escapeHtml(str){
       var div = document.createElement('div');
