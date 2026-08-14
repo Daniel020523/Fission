@@ -1575,24 +1575,35 @@
   // Restore any existing session on page load.
   var siteGate = document.getElementById('siteGate');
   var siteFrame = document.getElementById('siteFrame');
-  supabaseClient.auth.getSession().then(function(res){
-    currentSession = res.data.session;
-    updateAccountUI();
 
-    // Entry-point gate: signed-in visitors go straight to their
-    // dashboard; everyone else sees this marketing site as normal.
-    if (currentSession) {
-      try { sessionStorage.removeItem('fissionAuthBounceGuard'); } catch (e) {}
-      window.location.href = 'dashboard.html';
-      return;
-    }
+  // Use getUser() (server-validated) rather than getSession() (locally
+  // cached, can be stale/expired) as the source of truth here. This has to
+  // match what dashboard.html uses for its own auth guard — mismatched
+  // sources of truth were the cause of the index.html <-> dashboard.html
+  // refresh loop: index.html trusted a stale cached session and bounced
+  // back to dashboard.html, which correctly rejected it and bounced back.
+  supabaseClient.auth.getUser().then(function(res){
+    var user = res.data.user;
 
-    siteGate.classList.add('hidden');
-    siteFrame.classList.add('ready');
+    return supabaseClient.auth.getSession().then(function(res2){
+      currentSession = user ? res2.data.session : null;
+      updateAccountUI();
 
-    if (urlParams.get('auth') === '1' && !currentSession) {
-      openAuthModal('signup');
-    }
+      // Entry-point gate: signed-in visitors go straight to their
+      // dashboard; everyone else sees this marketing site as normal.
+      if (currentSession) {
+        try { sessionStorage.removeItem('fissionAuthBounceGuard'); } catch (e) {}
+        window.location.href = 'dashboard.html';
+        return;
+      }
+
+      siteGate.classList.add('hidden');
+      siteFrame.classList.add('ready');
+
+      if (urlParams.get('auth') === '1') {
+        openAuthModal('signup');
+      }
+    });
   }).catch(function(){
     // If the session check fails for any reason, fail open to the
     // marketing site rather than leaving the visitor on a blank gate.
