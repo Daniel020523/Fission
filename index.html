@@ -1582,6 +1582,7 @@
     // Entry-point gate: signed-in visitors go straight to their
     // dashboard; everyone else sees this marketing site as normal.
     if (currentSession) {
+      try { sessionStorage.removeItem('fissionAuthBounceGuard'); } catch (e) {}
       window.location.href = 'dashboard.html';
       return;
     }

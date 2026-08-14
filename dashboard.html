@@ -621,24 +621,44 @@
   // This page requires a signed-in Supabase session. If none is found,
   // send the person back to the marketing site to sign up or log in,
   // and remember to bounce them straight back here afterwards.
+  //
+  // NOTE: we validate with getUser() rather than getSession(). getSession()
+  // just reads whatever is cached in local storage and can return a session
+  // object even when it's stale/expired, which was causing index.html and
+  // dashboard.html to disagree about auth state and bounce the visitor back
+  // and forth forever. getUser() revalidates against Supabase directly.
+  //
+  // BOUNCE_GUARD_KEY is a belt-and-suspenders safety net: if we somehow still
+  // end up redirected here right after being sent to index.html for auth, we
+  // stop auto-redirecting and show a manual link instead of looping forever.
+  var BOUNCE_GUARD_KEY = 'fissionAuthBounceGuard';
+
   function redirectToAuth(){
+    if (sessionStorage.getItem(BOUNCE_GUARD_KEY) === '1') {
+      gateMsg.innerHTML = 'We couldn\'t confirm you\'re signed in. <a href="index.html?auth=1&redirect=dashboard" style="text-decoration:underline;">Click here to sign in</a>.';
+      return;
+    }
+    sessionStorage.setItem(BOUNCE_GUARD_KEY, '1');
     gateMsg.textContent = 'Please sign in to view your dashboard — redirecting…';
     setTimeout(function(){
       window.location.href = 'index.html?auth=1&redirect=dashboard';
     }, 700);
   }
 
-  supabaseClient.auth.getSession().then(function(res){
-    var session = res.data.session;
-    if (!session) {
+  supabaseClient.auth.getUser().then(function(res){
+    var user = res.data.user;
+    if (!user) {
       redirectToAuth();
       return;
     }
-    currentSession = session;
-    applySession(session);
-    gateScreen.classList.add('hidden');
-    shell.classList.add('ready');
-    initInteractivity();
+    sessionStorage.removeItem(BOUNCE_GUARD_KEY);
+    return supabaseClient.auth.getSession().then(function(res2){
+      currentSession = res2.data.session;
+      applySession(currentSession);
+      gateScreen.classList.add('hidden');
+      shell.classList.add('ready');
+      initInteractivity();
+    });
   }).catch(function(){
     redirectToAuth();
   });
